@@ -53,9 +53,9 @@ Module[{plot},
     Frame -> True,
     FrameLabel -> (Style[#, 12] & /@ {"Total number of votes",
       "Votes for A and B"}),
-    PlotLabel ->
-        Style["Accumulating votes during ballot counting (Total " <>
-            ToString[Plus @@ #] <> " votes)", Red],
+    PlotLabel -> Style[
+      "Accumulating votes " <> "A gets " <> ToString[#[[1]]]
+          <> " votes and B gets " <> ToString[#[[2]]] <> " votes", Red],
     Filling -> {1 -> {2}}, PlotRange -> {{0, 200}, {0, 200}},
     ImageSize -> 700, AspectRatio -> 1];
 
@@ -77,16 +77,16 @@ Module[{plot},
     Frame -> True,
     FrameLabel -> (Style[#, 12] & /@ {"Total number of votes",
       "Votes for A and B"}),
-    PlotLabel ->
-        Style["Accumulating votes during ballot counting (Total " <>
-            ToString[Plus @@ #] <> " votes)", Red],
+    PlotLabel -> Style[
+      "Accumulating votes " <> "A gets " <> ToString[#[[1]]]
+          <> " votes and B gets " <> ToString[#[[2]]] <> " votes", Red],
     Filling -> {1 -> {2}}, PlotRange -> {{0, 200}, {0, 200}},
     ImageSize -> 700, AspectRatio -> 1] & /@ ({#, 200 - #} & /@
       Range[1, 199, 1]);
 
   Export[
     StringReplace[NotebookFileName[],
-      ".nb" -> "_ballot_counting_animation.png"],
-    plot, ImageSize -> 788, ImageResolution -> 500,
+      ".nb" -> "_ballot_counting_animation.gif"],
+    plot, ImageSize -> 788, ImageResolution -> 100,
     "DisplayDurations" -> 1]
 ]
