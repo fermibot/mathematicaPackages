@@ -5,9 +5,10 @@ minSum[x_] :=
     Module[{total = x, count = 1, sum = RandomReal[]},
       While[sum <= total, sum += RandomReal[]; count += 1]; count]
 minSum[x_, sampleSize_] := Table[minSum[x], sampleSize]
+f[x_] := Piecewise[{{E^x, 0 < x <= 1}, {2 (x - 1) + E, x > 1}}]
 
 Module[{data, theory, meanTrack, mergedPlot,
-  range = Range[0.01, 1, 0.01]},
+  range = Range[0.01, 2, 0.01]},
   data = Table[minSum[#, 100] & /@ range, 100];
   data = MapThread[{#1, #2} &, {range, Mean /@ #}] & /@ data;
   meanTrack =
@@ -15,18 +16,21 @@ Module[{data, theory, meanTrack, mergedPlot,
         ImageSize -> 788,
         InterpolationOrder -> 2,
         PlotStyle -> Table[{Red, Thickness[0], Opacity@0.4}, Length@data],
-        Mesh -> All, MeshStyle -> {Black, PointSize[0]}];
+        Mesh -> All, MeshStyle -> {Black, PointSize[0]}, AspectRatio -> 1];
 
-  theory = Plot[E^x, {x, 0, 1}, PlotStyle -> {Dashed, Yellow, Thick}];
+  theory = Plot[f[x], {x, 0, 2}, PlotStyle -> {Dashed, Yellow, Thick}];
   mergedPlot =
       Show[meanTrack, theory, AspectRatio -> 1,
         PlotLabel ->
             stringJoinStyled[{Style["Simulation", Red],
               Style[" Theory", Darker@Yellow]}], ImageSize -> 788,
-        Frame -> True, FrameLabel -> {"x", "M(x)"}];
-  Export[StringReplace[NotebookFileName[],
-    ".nb" -> "_x_less_than_1.png"], mergedPlot,
-    ImageResolution -> 1000, ImageSize -> 788]
+        Frame -> True, FrameLabel -> {"x", "M(x)"}]
+  Export[
+    StringReplace[NotebookFileName[], ".nb" -> "_x_less_than_1.png"],
+    mergedPlot, ImageResolution -> 1000, ImageSize -> 788]
+
+
+
 ]
 Export[StringReplace[NotebookFileName[], ".nb" -> ".txt"],
   Parallelize[
