@@ -17,13 +17,13 @@ Module[{data, theory, meanTrack, mergedPlot,
         PlotStyle -> Table[{Red, Thickness[0], Opacity@0.4}, Length@data],
         Mesh -> All, MeshStyle -> {Black, PointSize[0]}];
 
-  theory = Plot[E^x, {x, 0, 1}, PlotStyle -> {Dashed, Black}];
+  theory = Plot[E^x, {x, 0, 1}, PlotStyle -> {Dashed, Yellow, Thick}];
   mergedPlot =
       Show[meanTrack, theory, AspectRatio -> 1,
         PlotLabel ->
             stringJoinStyled[{Style["Simulation", Red],
-              Style[" Theory", Black]}], ImageSize -> 788, Frame -> True,
-        FrameLabel -> {"x", "M(x)"}];
+              Style[" Theory", Darker@Yellow]}], ImageSize -> 788,
+        Frame -> True, FrameLabel -> {"x", "M(x)"}];
   Export[StringReplace[NotebookFileName[],
     ".nb" -> "_x_less_than_1.png"], mergedPlot,
     ImageResolution -> 1000, ImageSize -> 788]
