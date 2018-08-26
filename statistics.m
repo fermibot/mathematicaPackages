@@ -3,12 +3,12 @@
 
 (* :Title: statistics *)
 (* :Context: statistics` *)
-(* :Author: Alcatraz *)
+(* :Author: Fermibot *)
 (* :Date: 2018-08-16 *)
 
 (* :Package Version: 0.1 *)
 (* :Mathematica Version: *)
-(* :Copyright: (c) 2018 Alcatraz *)
+(* :Copyright: (c) 2018 Fermibot *)
 (* :Keywords: *)
 (* :Discussion: *)
 
