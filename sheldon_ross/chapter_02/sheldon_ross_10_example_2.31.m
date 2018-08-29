@@ -1,22 +1,45 @@
-(* Mathematica Package *)
-(* Created by Mathematica Plugin for IntelliJ IDEA *)
+AppendTo[$Path, "D:\\Mathematica Files 4K\\Packages"];
+Needs["utilities`"];
 
-(* :Title: sheldon_ross_10_example_2 *)
-(* :Context: sheldon_ross_10_example_2` *)
-(* :Author: Alcatraz *)
-(* :Date: 2018-08-28 *)
+ClearAll[listCompare];
 
-(* :Package Version: 0.1 *)
-(* :Mathematica Version: *)
-(* :Copyright: (c) 2018 Alcatraz *)
-(* :Keywords: *)
-(* :Discussion: *)
+listCompare[masterSample_List, randomSample_List] :=
+    Module[{alphabet = masterSample, sample = randomSample},
+      Table[
+        If[alphabet[[n]] == sample[[n]],
+          Style[sample[[n]], Darker@Green, Underlined, 15],
+          Style[sample[[n]], Red, 15]],
+        {n, 1, Length[sample]}]]
 
-BeginPackage["sheldon_ross_10_example_2`"]
-(* Exported symbols added here with SymbolName::usage *)
+Module[{alphabet = Alphabet[],
+  scenarios = Table[RandomSample[Alphabet[], 26], 100], reSelection,
+  tableForm},
+  reSelection = {Style[#, Bold, 15] & /@ Alphabet[]} ~
+      Join ~ (listCompare[alphabet, #] & /@ scenarios);
+  reSelection = styledStringJoin[#, " | "] & /@ reSelection;
+  tableForm = TableForm@reSelection;
 
-Begin["`Private`"]
+  Export[StringReplace[NotebookFileName[], ".nb" -> ".png"], tableForm,
+    ImageSize -> 788, ImageResolution -> 900]
+]
 
-End[] (* `Private` *)
 
-EndPackage[]
+
+Module[{list = Range[26], sample, barData, trials = 100000},
+  sample := RandomSample[list, Length@list];
+  barData =
+      Reverse[
+        Sort[
+          Counts[
+            Table[
+              Plus @@ Table[
+                If[list[[n]] == sample[[n]], 1, 0], {n, 1, Length@list}],
+              trials]]]];
+
+  BarChart[barData, ChartLabels -> Keys@barData,
+    LabelingFunction -> (Placed[#, Above] &),
+    PlotLabel -> ToString[trials] <> " trials"]
+]
+
+Export[StringReplace[NotebookFileName[], ".nb" -> "_02.png"], %,
+ImageSize -> 788, ImageResolution -> 900]

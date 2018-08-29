@@ -1,22 +1,39 @@
-(* Mathematica Package *)
-(* Created by Mathematica Plugin for IntelliJ IDEA *)
+cumulativeRange[list_List] := Accumulate[list] / Range[Length@list];
+Show[Table[
+  Module[{data =
+      cumulativeRange[RandomVariate[PoissonDistribution[2], 180]]},
+    Graphics[
+      Table[{PointSize[0.002], Opacity[0.5],
+        Point[{data[[r]] Sin[2 r \[Degree]],
+          data[[r]] Cos[2 r \[Degree]]}]}, {r, 1, Length@data}],
+      ImageSize -> 734]], 50]]
 
-(* :Title: sheldon_ross_10_example_2 *)
-(* :Context: sheldon_ross_10_example_2` *)
-(* :Author: Alcatraz *)
-(* :Date: 2018-08-28 *)
+ClearAll[cumulativeRange, radialLine];
 
-(* :Package Version: 0.1 *)
-(* :Mathematica Version: *)
-(* :Copyright: (c) 2018 Alcatraz *)
-(* :Keywords: *)
-(* :Discussion: *)
+cumulativeRange[list_List] := Accumulate[list] / Range[Length@list];
+radialLine[data_] :=
+    {Opacity[0.05], Thickness[0],
+      Line[Table[{data[[r]] Sin[2 r \[Degree]],
+        data[[r]] Cos[2 r \[Degree]]}, {r, 1, Length@data}]]};
 
-BeginPackage["sheldon_ross_10_example_2`"]
-(* Exported symbols added here with SymbolName::usage *)
+Export[NotebookDirectory[] <> "poisson_01.png",
+  Module[{data =
+      Table[cumulativeRange[
+        RandomVariate[PoissonDistribution[3.2], 180]], 500]},
+    Graphics[Join @@ {{Red, Thickness[0.005], Circle[{0, 0}, 3.2]},
+      {Opacity[0.01], Black, Thickness[0], radialLine[#] & /@ data}},
+      Frame -> True]], ImageSize -> 754]
 
-Begin["`Private`"]
+counter[count_] :=
+    Module[{data = RandomVariate[PoissonDistribution[3.2], count]},
+      Length[Select[data, # <= 2 &]] / count]
 
-End[] (* `Private` *)
+DistributionChart[
+  Table[counter[#], 1000] & /@ {5, 10, 20, 50, 100, 200, 500, 1000},
+  ChartElementFunction -> "HistogramDensity",
+  ChartLabels -> {5, 10, 20, 50, 100, 200, 500, 1000},
+  PlotLabel ->
+      "P{x\[LessEqual]2} with the number of seconds of waiting time"]
 
-EndPackage[]
+SetOptions[SelectedNotebook[], PrintingStyleEnvironment -> "Printout",
+  ShowSyntaxStyles -> True]

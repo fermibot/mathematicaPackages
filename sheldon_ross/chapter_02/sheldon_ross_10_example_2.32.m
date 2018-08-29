@@ -1,22 +1,17 @@
-(* Mathematica Package *)
-(* Created by Mathematica Plugin for IntelliJ IDEA *)
+Module[{coupons = Range[25], barData, trials = 1000000},
+  barData =
+      Reverse@Sort@
+          Counts[Length /@ Union /@ RandomChoice[coupons, {trials, 10}]];
+  Labeled[BarChart[barData, ChartLabels -> Keys@barData,
+    LabelingFunction -> (Placed[#, Above] &),
+    AxesLabel -> {None, Style["Count", 15]}, ImageSize -> 788,
+    PlotLabel -> ToString[trials] <> " trials"],
+    "Number of unique coupons"]
+]
 
-(* :Title: sheldon_ross_10_example_2 *)
-(* :Context: sheldon_ross_10_example_2` *)
-(* :Author: Alcatraz *)
-(* :Date: 2018-08-28 *)
+Export[StringReplace[NotebookFileName[], ".nb" -> ".png"], %,
+ImageSize -> 788, ImageResolution -> 1200]
 
-(* :Package Version: 0.1 *)
-(* :Mathematica Version: *)
-(* :Copyright: (c) 2018 Alcatraz *)
-(* :Keywords: *)
-(* :Discussion: *)
-
-BeginPackage["sheldon_ross_10_example_2`"]
-(* Exported symbols added here with SymbolName::usage *)
-
-Begin["`Private`"]
-
-End[] (* `Private` *)
-
-EndPackage[]
+Module[{coupons = Range[25], barData, trials = 1000000},
+  barData =
+      N@Mean[Length /@ Union /@ RandomChoice[coupons, {trials, 10}]]]
