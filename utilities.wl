@@ -12,6 +12,9 @@ associator::usage = "Takes an element and converts into a an association with a 
 associationAppender::usage = "A complex AppendTo, looks if the element the element passed already exists, If it does, it increments by that amount, if not, simply appends it.";
 valuesMissing::usage = "Additional layer over Values to handle non-existent entries";
 
+associationFunctionMap::usage = "Maps the function to the values in the and returns the modified form of it";
+unitize::usage = "Takes in a list(association) and returns a list(association) whose sum(sum of values) equals one ";
+associateLists::usage = "Takes two lists and MapThreads the first list to the second one and creates an association of of it";
 
 QuickSort::usage = "Fermibot's Mathematica implementation of Quick-Sort algorithm";
 QuickSortTrack::usage = "It's again QuickSort but it shows the progress of the sorting mechanism";
@@ -22,9 +25,6 @@ Begin["Private`"];
 Needs["qFunctions`"];
 
 accumulatingMean[list_List] := N[Accumulate[list] / Range[1, Length[list]]]
-
-stringJoinStyled[items_List, buffer_ : ""] := Apply[StringJoin, ToString[#, StandardForm] & /@ Riffle[items, buffer]]
-stringJoinBuffer[items_List, buffer_ : ""] := StringJoin @@ Riffle[ToString /@ items, buffer]
 
 
 associator[element_] := Association[element -> 1];
@@ -53,6 +53,25 @@ associationAppender[list_List] :=
 valuesMissing[association_, element_] :=
     If[Head[association[element]] === Missing, 0, association[element]]
 
+
+unitize[list_List] := N[list / Total[list]]
+unitize[association_Association] := Module[{sortedAssociation = KeySort[association], keys, values},
+  keys = Keys[sortedAssociation];
+  values = unitize[Values[sortedAssociation]];
+  Association[MapThread[{#1 -> #2}&, {keys, values}]]
+]
+
+associateLists[list1_List, list2_List] := Association[MapThread[{#1 -> #2}&, {list1, list2}]]
+
+
+associationFunctionMap[associationIn_Association, function_Symbol] :=
+    Module[{association = associationIn, keys, values},
+      keys = Keys@association; values = function /@ Values@association;
+      associateLists[keys, values]]
+
+
+stringJoinStyled[items_List, buffer_ : ""] := Apply[StringJoin, ToString[#, StandardForm] & /@ Riffle[items, buffer]]
+stringJoinBuffer[items_List, buffer_ : ""] := StringJoin @@ Riffle[ToString /@ items, buffer]
 
 
 pivotedList[list_List] :=
@@ -96,6 +115,7 @@ QuickSort[listIn_List] := Module[{list = {listIn}, pivotOut},
   ];
   Return@list
 ];
+
 
 End[];
 
