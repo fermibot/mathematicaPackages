@@ -1,3 +1,6 @@
+AppendTo[$Path, "D:\\Mathematica Files 4K\\mathematicaPackages"];
+Needs["utilities`"];
+
 ClearAll[swap, position, expectedPosition];
 swap[list_List, superiorNumber_] :=
     Module[{tempList = list, current},
@@ -19,7 +22,7 @@ Module[{n = 10, probabilities, list, choices, queue, plotData},
   probabilities =
       unitize[Association@
           MapThread[#1 -> #2 &, {list, RandomReal[{0, 1}, n]}]];
-  choices = RandomChoice[Values@# -> Keys@# &[probabilities], 100];
+  choices = RandomChoice[Values@# -> Keys@# &[probabilities], 1000];
   queue = {list};
   Table[AppendTo[queue, list = swap[list, choices[[r]]]], {r, 1,
     Length@choices}];
@@ -29,12 +32,17 @@ Module[{n = 10, probabilities, list, choices, queue, plotData},
             Mean[Values[#]] &];
 
   ListPlot[probabilities, GridLines -> {Keys@probabilities, Automatic},
-    Frame -> True, ImageSize -> 788] // Print;
+    Frame -> True, ImageSize -> 788,
+    FrameLabel -> {"Item", "Probability of being chosen"}] // Print;
   DistributionChart[Values@plotData, ImageSize -> 788,
     ChartElementFunction -> "Density", ChartStyle -> Lighter@Red,
     ChartLabels ->
         Placed[{Keys@KeySort@plotData,
           N@Values@
               KeySort@associationFunctionMap[plotData, Mean]}, {Below,
-          Above}]] // Print;
+          Above}],
+    FrameLabel -> {"Item", "Position of item over 1000 selections"},
+    PlotLabel ->
+        "The top of each bar is the mean position over 1000 selections"] //
+      Print;
 ]
