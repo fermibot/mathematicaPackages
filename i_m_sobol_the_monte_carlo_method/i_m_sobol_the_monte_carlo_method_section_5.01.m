@@ -1,11 +1,11 @@
 ClearAll[status, currentStatus];
 status[list_List, time_] :=
-    Boole[! Or @@ (Min[#] < time <= Max[#] & /@ list)]
+    Boole[Or @@ (Min[#] < time <= Max[#] & /@ list)]
 currentStatus[list_List, time_] := ! Min[#] < time <= Max[#] &[
   Last[list]]
 
-Module[{servers = 10, serverStatus, nCustomers = 100,
-  arrivals, \[Lambda]a = 5, \[Lambda]s = 0.1, firstFree},
+Module[{servers = 10, serverStatus, nCustomers = 120,
+  arrivals, \[Lambda]a = 5, \[Lambda]s = 1, firstFree},
   arrivals =
       Accumulate[
         RandomVariate[ExponentialDistribution[\[Lambda]a], nCustomers]];
@@ -15,7 +15,7 @@ Module[{servers = 10, serverStatus, nCustomers = 100,
     firstFree =
         First[Position[currentStatus[#, arrivals[[r]]] & /@ serverStatus,
           True]][[1]];
-    If[Echo[firstFree] =!= Null,
+    If[firstFree =!= Null,
       firstFree = First[firstFree][[1]];
       serverStatus[[firstFree]] =
           serverStatus[[firstFree]] ~
@@ -25,5 +25,9 @@ Module[{servers = 10, serverStatus, nCustomers = 100,
       Print["No server free"]]
     , {r, 1, Length@arrivals}];
 
-  Print /@ serverStatus
+  Column[Plot[Evaluate[status[#, r]], {r, 1, 100}, Exclusions -> None,
+    ExclusionsStyle -> Red, ImageSize -> 1200, AspectRatio -> 0.1,
+    PlotRange -> {{0, Max@arrivals}, {0, 1.1}}] & /@ serverStatus]
+
+
 ]
