@@ -53,17 +53,22 @@ Module[{multiSimData,
       ] & /@
           SortBy[FileNames["*temp*", NotebookDirectory[]],
             ToExpression@Last[StringSplit[StringDelete[#, ".csv"], "_"]] &];
-  Export[StringReplace[NotebookFileName[], ".nb" -> ".xlsx"],
+  Export[StringReplace[NotebookFileName[], ".nb" -> "_1000.xlsx"],
     multiSimData]
 ]
 
-Module[{data = StringReplace[NotebookFileName[], ".nb" -> ".xslx"]},
-  Association@
-      MapThread[#1 -> #2 &, {{"Passed", "Reflected", "Absorbed"},
-        Transpose[data]}];
-  DistributionChart[data, ImageSize -> 788,
-    ChartLabels ->
-        Placed[{Mean /@ Values@data, Keys@data}, {Top, Bottom}],
-    ChartElementFunction -> #] & /@ {"PointDensity", "SmoothDensity",
-    "Density", "HistogramDensity"}
+Column@Module[{data =
+    Import[StringReplace[NotebookFileName[], ".nb" -> "_1000.xlsx"]][[
+        1]]}, data =
+    Association@
+        MapThread[#1 -> #2 &, {{"Passed", "Reflected", "Absorbed"},
+          Transpose[data]}];
+DistributionChart[data, ImageSize -> 500,
+  ChartLabels ->
+      Placed[{"Mean = " <> ToString@# & /@ (Mean /@ Values@data),
+        Keys@data}, {Above, Below}], ChartElementFunction -> #,
+  PlotLabel ->
+      "1000 Neutron Statistics for Barrier Width = 2 units & \
+Absorption number = 10"] & /@ {"PointDensity", "SmoothDensity",
+  "Density"}
 ]
