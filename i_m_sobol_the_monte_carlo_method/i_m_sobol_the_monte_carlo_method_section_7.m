@@ -41,17 +41,11 @@ Module[{data =
 Module[{multiSimData,
   printTemporary = PrintTemporary["Beginning analysis"]},
   multiSimData =
-      Module[{data = DeleteCases[Import[#], {}], collisions, last,
-        reflected, absorbed, passed, plotDataReflected, plotDataPassed,
-        plotDataAbsorbed},
-        collisions = {Length[#], Last[#]} & /@ data;
-        last = Last /@ data;
+      Module[{data = DeleteCases[Import[#], {}], reflected, absorbed,
+        passed},
         reflected = Select[data, (Last[#] < 0) &];
         absorbed = Select[data, (0 <= Last@# <= 2) &];
         passed = Select[data, (Last@# > 2) &];
-        plotDataReflected = yRandomizer /@ reflected;
-        plotDataPassed = yRandomizer /@ passed;
-        plotDataAbsorbed = yRandomizer /@ absorbed;
         NotebookDelete[printTemporary];
         printTemporary =
             PrintTemporary[Style["Analyzing the file " <> #, Darker@Green]];
