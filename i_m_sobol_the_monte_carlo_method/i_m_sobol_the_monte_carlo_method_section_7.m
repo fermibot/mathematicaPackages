@@ -62,3 +62,14 @@ Module[{multiSimData,
   Export[StringReplace[NotebookFileName[], ".nb" -> ".xlsx"],
     multiSimData]
 ]
+
+Module[{data = StringReplace[NotebookFileName[], ".nb" -> ".xslx"]},
+  Association@
+      MapThread[#1 -> #2 &, {{"Passed", "Reflected", "Absorbed"},
+        Transpose[data]}];
+  DistributionChart[data, ImageSize -> 788,
+    ChartLabels ->
+        Placed[{Mean /@ Values@data, Keys@data}, {Top, Bottom}],
+    ChartElementFunction -> #] & /@ {"PointDensity", "SmoothDensity",
+    "Density", "HistogramDensity"}
+]
