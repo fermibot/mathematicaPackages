@@ -17,7 +17,11 @@ Plot[{toIntegrate[x], probabilityFunction[x],
     InfiniteLine[{{0, 0.5}, {2, 0.5}}]}}]
 
 
-Histogram[
-  Mean[With[{\[Xi] = RandomVariate[TriangularDistribution[{0, 2}]]},
-    toIntegrate[\[Xi]] / probabilityFunction[\[Xi]]] & /@
-      Range@10] & /@ Range[10000], 200]
+With[{r = #},
+  Histogram[
+    Mean[With[{\[Xi] = RandomVariate[TriangularDistribution[{0, 2}]]},
+      toIntegrate[\[Xi]] / probabilityFunction[\[Xi]]] & /@
+        Range@r] & /@ Range[10000], 150, ImageSize -> 788,
+    PlotRange -> {{1.00, 1.50}, All},
+    PlotLabel -> "\[Eta] size = " <> ToString@r]] & /@ {10, 20, 30,
+  50, 100}
