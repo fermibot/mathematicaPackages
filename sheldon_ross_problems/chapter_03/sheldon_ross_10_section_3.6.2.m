@@ -14,6 +14,7 @@ Module[{plotData, nNodes = Union @@ (Range[10] * 10^# & /@ Range[0, 1])},
     associateLists[nNodes, graphTruth]
   ] & /@ Range@20;
   ListLogLogPlot[plotData, Joined -> True,
-    PlotStyle -> Table[{Green // Darker, Thickness@0}, Length@plotData],
+    PlotStyle ->
+        Table[{Darker@Green, Opacity@0.2, Thickness@0}, Length@plotData],
     InterpolationOrder -> 2, ImageSize -> 788,
     Ticks -> {nNodes, Range[0, 1, 0.1]}]]
