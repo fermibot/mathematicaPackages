@@ -18,3 +18,12 @@ Module[{p = RandomReal[] & /@ Range[10000], data},
     ChartLabels -> Placed[{Keys@data, Values@data}, {Below, Above}],
     ImageSize -> 788]
 ]
+
+Module[{p = RandomVariate[TriangularDistribution[{0, 1}], 100000],
+  data},
+  data = KeySort@
+      Counts[RandomVariate[BinomialDistribution[20, #]] & /@ p];
+  BarChart[data,
+    ChartLabels -> Placed[{Keys@data, Values@data}, {Below, Above}],
+    ImageSize -> 788]
+]
