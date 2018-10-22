@@ -2,7 +2,7 @@ AppendTo[$Path, "D:\\Mathematica Files 4K\\mathematicaPackages"];
 SetOptions[$FrontEndSession, "EvaluationCompletionAction" -> {"ScrollToOutput"}]
 Needs["utilities`"];
 
-Uniform Priors
+(*Uniform Priors*)
 
 Gamma[n + 1] / (Gamma[k + 1] Gamma[n - k + 1]) \!\(
 \*SubsuperscriptBox[\(\[Integral]\), \(0\), \(1\)]\(
