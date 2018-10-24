@@ -17,7 +17,10 @@ Module[{data},
                   Length /@ megaList
                 ]}
                 , {p, 0.05, 0.80, 0.05}];
-  DistributionChart[data, ChartLabels -> Keys@data,
+  DistributionChart[
+    data,
+    ChartLabels -> Keys@data,
     ChartElementFunction -> "SmoothDensity", ImageSize -> 788,
-    GridLines -> {None, Mean /@ (Values@data)}, AspectRatio -> 1]
+    GridLines -> {None, Mean /@ (Values@data)}, AspectRatio -> 1
+  ]
 ]
