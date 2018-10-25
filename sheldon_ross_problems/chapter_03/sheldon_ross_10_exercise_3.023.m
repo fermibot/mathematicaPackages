@@ -30,5 +30,6 @@ Module[{data},
     ImageSize -> 788,
     GridLines -> {None, Mean /@ (Values@data)},
     AspectRatio -> 1,
-    PlotRange -> {All, All}]
+    PlotRange -> {All, All}
+  ]
 ]
