@@ -19,12 +19,14 @@ Module[
         Column /@
             Partition[
               MapThread[
-                DistributionChart[#1, ImageSize -> 788,
+                DistributionChart[#1,
+                  ImageSize -> 788,
                   ChartElementFunction -> "SmoothDensity",
                   ChartBaseStyle -> Opacity[0.5],
                   GridLines -> {None, Range[100, max, 100]},
                   ChartLabels -> chartLabels,
-                  FrameLabel -> {{"", #2}, {"", ""}}, AspectRatio -> 0.25,
+                  FrameLabel -> {{"", #2}, {"", ""}},
+                  AspectRatio -> 0.25,
                   PlotRange -> {All, {0, max}}
                 ] &, {data, ("\!\(\*SubscriptBox[\(p\), \(B\)]\) = " <> ToString[#]) & /@ Range[0.1, 0.9, 0.1]}
               ]
