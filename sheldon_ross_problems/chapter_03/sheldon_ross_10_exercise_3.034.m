@@ -21,3 +21,5 @@ Module[{sets = {1, 2, 5, 10, 20, 25, 40, 50, 100}},
     ChartLabels -> ("n = " <> ToString[#] & /@ sets),
     PlotRange -> {Automatic, {0, 60}}]
 ]
+
+(*looking to see if the detached head state is gotten rid off*)
