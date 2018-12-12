@@ -10,6 +10,7 @@ Module[{outcomesMeta = {}},
         Range[0, 10];
     AppendTo[outcomesMeta, outcomes];
   ], 200];
+
   ListLinePlot[outcomesMeta, Frame -> True, ImageSize -> 788,
     InterpolationOrder -> 2,
     PlotStyle -> {{PointSize@0.004, Thickness@0, Darker@Green,
@@ -17,7 +18,8 @@ Module[{outcomesMeta = {}},
     GridLines -> {Range @@ {0, 10, 0.5}, Range @@ {0, 0.2, 0.02}},
     FrameTicks -> {Range @@ {0, 10, 1}, Range @@ {0, 0.2, 0.02}},
     PlotRange -> {Automatic, {0, 0.2}}, AspectRatio -> 0.5,
-    PlotLabel -> "P{N=n}"]]
+    PlotLabel -> "P{N=n}"]
+]
 
 
 Module[{simulation},
