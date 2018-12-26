@@ -1,7 +1,7 @@
 Module[{outcomes = {}, players = ToUpperCase[Alphabet[][[1 ;; 3]]],
   printTemporary, megaRuns = 1000},
   Table[
-    Module[{outcome = {}, runs = 1000},
+    Module[{outcome = {}, runs = 99},
       printTemporary =
           PrintTemporary[
             "Simulating sequence: " <> ToString[r] <> " off " <>
@@ -27,6 +27,7 @@ Module[{outcomes = {}, players = ToUpperCase[Alphabet[][[1 ;; 3]]],
           ]
         ]], runs];
       AppendTo[outcomes, KeySort[Counts[#[[2]] & /@ outcome] / runs]];
+      Pause[0.01];
       NotebookDelete@printTemporary;
     ], {r, 1, megaRuns}];
 
