@@ -1,11 +1,11 @@
 Module[{outcomes = {}, players = ToUpperCase[Alphabet[][[1 ;; 3]]],
   printTemporary, megaRuns = 1000},
   Table[
-    Module[{outcome = {}, runs = 99},
+    Module[{outcome = {}, runs = 1000},
       printTemporary =
           PrintTemporary[
-            "Simulating sequence: " <> ToString[r] <> " off " <>
-                ToString@megaRuns];
+            Style["Simulating sequence: " <> ToString[r] <> " off " <>
+                ToString@megaRuns, Red]];
       Table[Module[{counter = 0,
         gameTrack = <|"A" -> {}, "B" -> {}, "C" -> {}|>, waiting = "C",
         current = {"A", "B"}, roundLoser, roundWinner, winner},
@@ -34,5 +34,13 @@ Module[{outcomes = {}, players = ToUpperCase[Alphabet[][[1 ;; 3]]],
   outcomes =
       Association@
           Table[player -> (#[player] & /@ outcomes), {player, players}];
-  DistributionChart[outcomes, "ChartElementFunction" -> "PointDensity"]
+  DistributionChart[outcomes, "ChartElementFunction" -> #,
+    PlotLabel -> Style[#, Bold, 16], ImageSize -> 788,
+    AspectRatio -> 0.3,
+    ChartLabels ->
+        Placed[{# <> "\n" & /@ (ToString /@
+            N /@ Mean /@ Values@outcomes),
+          "\n" <> # & /@ Keys@outcomes}, {Above,
+          Below}]] & /@ {"PointDensity", "SmoothDensity", "Quantile"} //
+      Column // Framed
 ]
