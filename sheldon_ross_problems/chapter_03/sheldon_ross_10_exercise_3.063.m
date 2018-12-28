@@ -1,8 +1,8 @@
 ClearAll[associationRandomizer];
 associationRandomizer[association_?AssociationQ, offset_Real : 0.3] :=
     MapThread[{#1 + RandomReal[{-offset, offset}], #2 +
-        RandomReal[{-offset, offset}]} &, {Values@association,
-      Keys@association}]
+        RandomReal[{-offset, offset}]} &, {Keys@association,
+      Values@association}]
 
 Module[{plotData = List[], plotExtent = 15},
   Do[
