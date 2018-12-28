@@ -51,4 +51,4 @@ Row[Riffle[#, "\t\t"]] &[
         Epilog -> {Text[
           "Unique coupons \nfor taking = " <> ToString[take], {18,
             21}]}]
-    ], {take, #}]] & /@ {Range[2, 26, 2], Range[28, 52, 2]}]
+    ], {take, #}]] & /@ {Range[4, 26, 2], Range[28, 52, 2]}]
