@@ -17,7 +17,7 @@ Module[{p = 0.5, length = 100, plotExtent = 25, iterations = 10000},
     PlotStyle -> {{Opacity@0.2, PointSize@0.001, Lighter@Blue}},
     Frame -> True, GridLines -> ConstantArray[Range[plotExtent], 2],
     GridLinesStyle -> LightGray,
-    FrameLabel -> (Style[#, 14] & /@ {"Length of continous wins",
+    FrameLabel -> (Style[#, 14] & /@ {"Length of continuous wins",
       "Number of occurrences"})]
 ]
 
