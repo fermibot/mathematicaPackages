@@ -20,17 +20,17 @@ Module[{p = 0.5, length = 120, plotExtent = 25, iterations = 10000},
 ]
 
 Grid[Partition[
-  Table[Module[{p = r, length = 120, plotExtent = 20,
-    iterations = 1000},
+  Table[Module[{p = r, length = 100, plotExtent = 15,
+    iterations = 10000},
     ListPlot[
-      associationRandomizer /@
+      associationRandomizer[#, 0.5] & /@
           Table[(Counts[
             Length /@ Cases[#, {1 ..}] &[
               Split@RandomChoice[{p, 1 - p} -> {1, 0}, length]]]),
             iterations], AspectRatio -> 1,
       PlotRange -> {{0, plotExtent}, {0, plotExtent}},
-      ImageSize -> 394,
-      PlotStyle -> {{Opacity@0.5, PointSize@0.001, Lighter@Blue}},
+      ImageSize -> 263,
+      PlotStyle -> {{Opacity@0.25, PointSize@0.001, Darker@Hue@r}},
       Frame -> True, (*GridLines\[Rule]ConstantArray[Range[plotExtent],
      2]*)GridLinesStyle -> LightGray]
-  ], {r, 0.1, 0.8, 0.1}], 2]]
+  ], {r, 0.1, 0.9, 0.1}], 3]]
