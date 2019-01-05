@@ -31,8 +31,7 @@ With[{r = 0.1},
       1.75 Cos[# + r \[Pi]]}, {2 Sin[#], 2 Cos[#]}}]} & /@
       Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
     ImageSize -> 788]]
-(*Export[NotebookDirectory[]<>"envelope_02.png",%,ImageSize\[Rule]788]\
-*)
+(*Export[NotebookDirectory[]<>"envelope_02.png",%,ImageSize\[Rule]788]*)
 
 With[{r = 0.75},
   Graphics[{Thickness@0, Opacity@0.1,
