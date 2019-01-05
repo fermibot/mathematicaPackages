@@ -31,7 +31,7 @@ chainObject[list_List, totalNodes_Integer] :=
     {Opacity@0.1, BSplineCurve[circleSubset, SplineDegree -> 2]}
     ]
 
-Grid[Partition[#, 3]] &[
+Grid[Partition[#, 3], Frame -> All, FrameStyle -> Gray] &[
   Table[Module[{dimensions = 16, transitionMatrix, labels, p = prob,
     iterations = 100, simulations = {}},
     transitionMatrix = ConstantArray[0, ConstantArray[dimensions, 2]];
@@ -58,7 +58,11 @@ Grid[Partition[#, 3]] &[
       AppendTo[simulations, simulation];
     ], iterations];
 
-    Graphics[{chainObject[#, 16] & /@ simulations,
-      Text["p = " <> ToString[p], {0, 0}]},
+    Graphics[
+      {chainObject[#, 16] & /@ simulations,
+        Text["p($+) = " <> ToString[p], {0, 0}],
+        Text[Rotate[Style["start", Red], -0.4 Pi], {0.3, -0.6}],
+        Text[Rotate[Style["win", Red], -0.5 Pi], {0, 0.6}],
+        Text[Rotate[Style["lose", Red], -0.6 Pi], {0.2, 0.6}]},
       PlotRange -> ConstantArray[{-1.3, 1.3}, 2], ImageSize -> 262]
   ], {prob, Range[0.1, 0.9, 0.1]}]]
