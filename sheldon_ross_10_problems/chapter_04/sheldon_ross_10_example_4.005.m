@@ -5,5 +5,5 @@ Grid[Partition[#, 3], Frame -> All, FrameStyle -> Gray] &[
         Line[Accumulate[{RandomChoice[{p, 1 - p} -> {-1, 1}],
           RandomChoice[{-1, 1}]} & /@ Range[100]]]}, 1000],
       PlotRange -> ConstantArray[{-range, range}, 2],
-      ImageSize -> 262], "p = " <> ToString[p]}]], {probability,
-    Range[0.1, 0.9, 0.1]}]]
+      ImageSize -> 262, Axes -> True, Ticks -> True],
+      "p = " <> ToString[p]}]], {probability, Range[0.1, 0.9, 0.1]}]]
