@@ -1,78 +1,64 @@
-ClearAll[twoPlayersGame]
+Manipulate[
+  Graphics[{Thickness@0, Opacity@0.5,
+    Line[{{Sin[#], Cos[#]}, {Sin[# - r \[Pi]],
+      Cos[# + r \[Pi]]}}]} & /@
+      Range[1, 2 \[Pi], Divide[\[Pi], 100]], ImageSize -> 788], {r, 0, 1}]
 
-twoPlayersGame[player1_, player2_] :=
-    Module[{probabilities, players = {player1, player2}},
-      probabilities = Divide[#, Plus @@ players] & /@ players;
-      RandomChoice[probabilities -> players]]
-twoPlayersGame[{player1_, player2_}] :=
-    twoPlayersGame[player1, player2]
-twoPlayersGame[association_Association] :=
-    Module[{probabilities, players = Keys@association, winner},
-      probabilities = Values@association;
-      probabilities = Divide[#, Plus @@ probabilities] & /@ probabilities;
-      winner = RandomChoice[probabilities -> players];
-      {Complement[Keys@association, {winner}][[1]], winner}
-    ];
+With[{r = 0.75},
+  Graphics[{Thickness@0, Opacity@0.1,
+    Line[{{Sin[#], Cos[#]}, {Sin[# + r \[Pi]],
+      Cos[# + r \[Pi]]}, {1.5 Sin[#],
+      1.5 Cos[#]}, {1.5 Sin[# - r \[Pi]],
+      1.5 Cos[# + r \[Pi]]}}]} & /@
+      Range[1, 2 \[Pi], Divide[\[Pi], 2000]], ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_01.png", %, ImageSize -> 788]*)
 
-Module[{players =
-    Transpose@
-        Import[StringReplace[NotebookFileName[], ".nb" -> ".xlsx"]][[1]],
-  playersDictionary},
-  playersDictionary = <||>;
-  (playersDictionary[First@#] = Rest@#) & /@ players;
+With[{r = 0.75},
+  Graphics[{Thickness@0, Opacity@0.1,
+    Line[{{Sin[#], Cos[#]}, {Sin[# + r \[Pi]],
+      Cos[# + r \[Pi]]}, {1.5 Sin[#],
+      1.5 Cos[#]}, {1.5 Sin[# - r \[Pi]],
+      1.5 Cos[# + r \[Pi]]}}]} & /@
+      Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_01_full.png", %, ImageSize -> 788]*)
 
-  MapThread[(playersDictionary[#1] = RandomSample[#2]) &, {Keys@
-      playersDictionary, Values@playersDictionary}];
+With[{r = 0.1},
+  Graphics[{Thickness@0, Opacity@0.1,
+    Line[{{Sin[#], Cos[#]}, {1.25 Sin[# + r \[Pi]],
+      1.25 Cos[# + r \[Pi]]}, {1.5 Sin[# - 0.5 r \[Pi]],
+      1.5 Cos[# - 0.5 r \[Pi]]}, {1.75 Sin[# + r \[Pi]],
+      1.75 Cos[# + r \[Pi]]}, {2 Sin[#], 2 Cos[#]}}]} & /@
+      Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[]<>"envelope_02.png",%,ImageSize\[Rule]788]*)
 
-  Module[{poolWinners, poolWinnersDictionary = <||>},
-    poolWinners =
-        Table[Module[{poolPlayersTrack, poolPlayers = playersDictionary[#]},
-          poolPlayersTrack = {poolPlayers};
-          While[Length@poolPlayers > 1,
-            poolPlayers = twoPlayersGame /@ Partition[poolPlayers, 2];
-            AppendTo[poolPlayersTrack, poolPlayers]
-          ];
-          poolPlayers[[1]]
-        ], 1][[1]] & /@ Keys[playersDictionary];
-    MapThread[(poolWinnersDictionary[#1] = #2) &, {ToUpperCase@
-        Alphabet[][[1 ;; 3]], poolWinners}];
+With[{r = 0.75},
+  Graphics[{Thickness@0, Opacity@0.1,
+    Line[{{Sin[#], Cos[#]}, {Sin[# + r \[Pi]],
+      Cos[# + r \[Pi]]}, {1.5 Sin[r #],
+      1.5 Cos[r #]}, {1.5 Sin[# + r \[Pi]],
+      1.5 Cos[# + r \[Pi]]}}]} & /@
+      Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_05.png", %, ImageSize -> 788]*)
 
+With[{r = 0.75},
+  Graphics[{Thickness@0, Opacity@0.05,
+    Line[{{2 Sin[#], 2 Cos[#]}, {1.75 Sin[# + r \[Pi]],
+      1.75 Cos[# - r \[Pi]]}, {Sin[#],
+      Cos[#]}, {1.75 Sin[# - r \[Pi]],
+      1.75 Cos[# + r \[Pi]]}, {2 Sin[#], 2 Cos[#]}}]} & /@
+      Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_06.png", %, ImageSize -> 788]*)
 
-    Module[{outcomes = {}, printTemporary, megaRuns = 10,
-      plotData = <||>},
-      Table[Module[{outcome = {}, runs = 100},
-        printTemporary =
-            PrintTemporary[
-              Style["Simulating sequence: " <> ToString[r] <> " off " <>
-                  ToString@megaRuns, Red]];
-        Table[
-          Module[{counter = 0,
-            gameTrack = <|"A" -> {}, "B" -> {}, "C" -> {}|>,
-            waiting = "C", current = {"A", "B"}, roundLoser, roundWinner,
-            winner},
-            While[True, counter += 1;
-            {roundLoser, roundWinner} =
-                Module[{secretDictionary =
-                    Association[# -> poolWinnersDictionary[#] & /@ current]},
-                  twoPlayersGame[secretDictionary]];
-            current = {roundWinner, waiting};
-            waiting = roundLoser;
-            MapThread[(gameTrack[#1] =
-                Append[gameTrack[#1], #2]) &, {{current[[1]],
-              current[[2]], waiting}, {1, 0, 0}}];
-            If[counter >= 2,
-              If[Or @@ (Take[#, -2] == {1, 1} & /@ gameTrack),
-                winner =
-                    Piecewise[{#, Take[gameTrack[#], -2] == {1, 1}} & /@
-                        Keys[gameTrack]];
-                AppendTo[outcome, {counter, winner}];
-                Break[]]]]], runs];
-        AppendTo[outcomes, KeySort[Counts[#[[2]] & /@ outcome] / runs]];
-        Pause[0.01];
-        NotebookDelete@printTemporary;], {r, 1, megaRuns}];
-
-      BarChart[outcomes, ChartLabels -> Automatic, ImageSize -> 788]
-    ]
-  ]
-]
-
+With[{r = 0.5},
+  Graphics[{Thickness@0, Opacity@0.05,
+    Line[{{2 Sin[#], 2 Cos[#]}, {1.75 Sin[# + r \[Pi]],
+      1.75 Cos[# - r \[Pi]]}, {Sin[#],
+      Cos[#]}, {1.75 Sin[# - r \[Pi]],
+      1.75 Cos[# + r \[Pi]]}, {2 Sin[#], 2 Cos[#]}}]} & /@
+      Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_07.png", %, ImageSize -> 788]*)
