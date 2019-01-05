@@ -37,11 +37,10 @@ Module[{players =
     MapThread[(poolWinnersDictionary[#1] = #2) &, {ToUpperCase@
         Alphabet[][[1 ;; 3]], poolWinners}];
 
-    Print[poolWinnersDictionary];
-    twoPlayersGame[<|"A" -> 2, "B" -> 3|>] // Print;
 
-    Module[{outcomes = {}, printTemporary, megaRuns = 10},
-      Table[Module[{outcome = {}, runs = 2},
+    Module[{outcomes = {}, printTemporary, megaRuns = 10,
+      plotData = <||>},
+      Table[Module[{outcome = {}, runs = 100},
         printTemporary =
             PrintTemporary[
               Style["Simulating sequence: " <> ToString[r] <> " off " <>
@@ -54,8 +53,8 @@ Module[{players =
             While[True, counter += 1;
             {roundLoser, roundWinner} =
                 Module[{secretDictionary =
-                    Echo[Association[# -> poolWinnersDictionary[#] & /@
-                        current]]}, twoPlayersGame[secretDictionary]];
+                    Association[# -> poolWinnersDictionary[#] & /@ current]},
+                  twoPlayersGame[secretDictionary]];
             current = {roundWinner, waiting};
             waiting = roundLoser;
             MapThread[(gameTrack[#1] =
@@ -71,7 +70,9 @@ Module[{players =
         AppendTo[outcomes, KeySort[Counts[#[[2]] & /@ outcome] / runs]];
         Pause[0.01];
         NotebookDelete@printTemporary;], {r, 1, megaRuns}];
+
+      BarChart[outcomes, ChartLabels -> Automatic, ImageSize -> 788]
     ]
-  ];
+  ]
 ]
 
