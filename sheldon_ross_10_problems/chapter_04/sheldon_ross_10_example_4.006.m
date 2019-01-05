@@ -13,14 +13,13 @@ Module[{dimensions = 16, transitionMatrix, labels},
   Graph[labels, DiscreteMarkovProcess[1, transitionMatrix],
     GraphLayout -> "CircularEmbedding", ImageSize -> 500] // Framed
 ]
-
 Clear[markovSimulator, circlePointsRandomizer, chainObject];
 markovSimulator[transitionMatrix_?MatrixQ, currentState_Integer] :=
     Module[{states = Range[Dimensions[transitionMatrix][[1]]]},
       RandomChoice[transitionMatrix[[currentState]] -> states]];
 
 circlePointsRandomizer[n_Integer] :=
-    MapThread[{(1 + #2) Sin[Divide[2 \[Pi] #1, n]], (1 + #2) Cos[
+    MapThread[{-(1 + #2) Sin[Divide[2 \[Pi] #1, n]], (1 + #2) Cos[
       Divide[2 \[Pi] #1, n]]} &, {Range[n],
       RandomReal[{-0.2, 0.2}, n]}]
 
@@ -28,12 +27,12 @@ circlePointsRandomizer[n_Integer] :=
 chainObject[list_List, totalNodes_Integer] :=
     Module[{perimeter = circlePointsRandomizer[totalNodes],
       circleSubset}, circleSubset = perimeter[[list]];
-    {Opacity@0.1, BSplineCurve[circleSubset, SplineDegree -> 2]}
+    {Opacity@0.05, BSplineCurve[circleSubset, SplineDegree -> 2]}
     ]
 
 Grid[Partition[#, 3], Frame -> All, FrameStyle -> Gray] &[
   Table[Module[{dimensions = 16, transitionMatrix, labels, p = prob,
-    iterations = 100, simulations = {}},
+    iterations = 200, simulations = {}},
     transitionMatrix = ConstantArray[0, ConstantArray[dimensions, 2]];
     Table[If[(i == 1 && j == 1) || (i == dimensions &&
         j == dimensions), transitionMatrix[[i, j]] = 1,
@@ -61,8 +60,8 @@ Grid[Partition[#, 3], Frame -> All, FrameStyle -> Gray] &[
     Graphics[
       {chainObject[#, 16] & /@ simulations,
         Text["p($+) = " <> ToString[p], {0, 0}],
-        Text[Rotate[Style["start", Red], -0.4 Pi], {0.3, -0.6}],
-        Text[Rotate[Style["win", Red], -0.5 Pi], {0, 0.6}],
-        Text[Rotate[Style["lose", Red], -0.6 Pi], {0.2, 0.6}]},
+        Text[Rotate[Style["start $6", Red], 0.4 Pi], {-0.3, -0.6}],
+        Text[Rotate[Style["win $15", Red], 0.5 Pi], {0, 0.6}],
+        Text[Rotate[Style["lose $0", Red], 0.6 Pi], {-0.2, 0.6}]},
       PlotRange -> ConstantArray[{-1.3, 1.3}, 2], ImageSize -> 262]
   ], {prob, Range[0.1, 0.9, 0.1]}]]
