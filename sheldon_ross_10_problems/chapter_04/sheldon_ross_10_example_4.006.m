@@ -13,6 +13,7 @@ Module[{dimensions = 16, transitionMatrix, labels},
   Graph[labels, DiscreteMarkovProcess[1, transitionMatrix],
     GraphLayout -> "CircularEmbedding", ImageSize -> 500] // Framed
 ]
+
 Clear[markovSimulator, circlePointsRandomizer, chainObject];
 markovSimulator[transitionMatrix_?MatrixQ, currentState_Integer] :=
     Module[{states = Range[Dimensions[transitionMatrix][[1]]]},
