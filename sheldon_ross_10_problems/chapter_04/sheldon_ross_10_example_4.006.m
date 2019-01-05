@@ -14,16 +14,25 @@ Module[{dimensions = 16, transitionMatrix, labels},
     GraphLayout -> "CircularEmbedding", ImageSize -> 500] // Framed
 ]
 
-Clear[markovSimulator, chainObject];
+Clear[markovSimulator, circlePointsRandomizer, chainObject];
 markovSimulator[transitionMatrix_?MatrixQ, currentState_Integer] :=
     Module[{states = Range[Dimensions[transitionMatrix][[1]]]},
       RandomChoice[transitionMatrix[[currentState]] -> states]];
 
+circlePointsRandomizer[n_Integer] :=
+    MapThread[{(1 + #2) Sin[Divide[2 \[Pi] #1, n]], (1 + #2) Cos[
+      Divide[2 \[Pi] #1, n]]} &, {Range[n],
+      RandomReal[{-0.1, 0.1}, n]}]
+
+
 chainObject[list_List, totalNodes_Integer] :=
-    Module[{perimeter = CirclePoints[totalNodes]}, perimeter]
+    Module[{perimeter = circlePointsRandomizer[totalNodes],
+      circleSubset}, circleSubset = perimeter[[list]];
+    {Opacity@0.1, BSplineCurve[circleSubset, SplineDegree -> 2]}
+    ]
 
 Module[{dimensions = 16, transitionMatrix, labels, p = 0.8,
-  iterations = 1},
+  iterations = 100, simulations = {}},
   transitionMatrix = ConstantArray[0, ConstantArray[dimensions, 2]];
   Table[If[(i == 1 && j == 1) || (i == dimensions && j == dimensions),
     transitionMatrix[[i, j]] = 1,
@@ -44,6 +53,8 @@ Module[{dimensions = 16, transitionMatrix, labels, p = 0.8,
       AppendTo[simulation, start];
       If[start == 1 || start == 16, Break[]];
     ];
-    simulation
-  ], iterations][[1]]
+    AppendTo[simulations, simulation];
+  ], iterations];
+
+  Graphics[chainObject[#, 16] & /@ simulations]
 ]
