@@ -62,3 +62,14 @@ With[{r = 0.5},
       Range[Divide[\[Pi], 2000], 2 \[Pi], Divide[\[Pi], 2000]],
     ImageSize -> 788]]
 (*Export[NotebookDirectory[] <> "envelope_07.png", %, ImageSize -> 788]*)
+
+With[{r = 0.25, pieces = 2000},
+  Graphics[{Thickness@0, Opacity@0.05,
+    Line[{{Sin@-#, Cos@#}, {1.5 Sin[# + 3 r \[Pi]],
+      1.5 Cos[# - 3 r \[Pi]]}, {Sin@#,
+      Cos@-#}, {1.5 Sin[# - 2 r \[Pi]],
+      1.5 Cos[# + 2 r \[Pi]]}, {Sin@-#,
+      Cos@#}, {1.5 Sin[# + r \[Pi]], 1.5 Cos[# - r \[Pi]]}}]} & /@
+      Range[Divide[\[Pi], pieces], 2 \[Pi], Divide[\[Pi], pieces]],
+    ImageSize -> 788]]
+(*Export[NotebookDirectory[] <> "envelope_08.png", %, ImageSize -> 788]*)
