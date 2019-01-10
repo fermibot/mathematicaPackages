@@ -49,4 +49,13 @@ tangentPlot[(3 + Sin[5 t]) Sin[t], (3 + Sin[5 t]) Cos[t],
 tangentPlot[(3 + Sin[6 t]) Sin[t], (3 + Sin[6 t]) Cos[t],
   "NumberOfLines" -> 10000, "TangentColor" -> Hue[0.55]]
 
-tangentPlot[Sin[t], Sin[t] Cos[t]]
+tangentPlot[Sin[t], Sin[t] Cos[t], Background -> White,
+  "NumberOfLines" -> 10000, "TangentColor" -> Red]
+
+tangentPlot[Sin[2 t], Sin[t] Cos[2 t], Background -> White,
+  "NumberOfLines" -> 10000, "TangentColor" -> Gray]
+
+tangentPlot[Sin[t] Cos[2 t], Sin[2 t] Cos[2 t]]
+
+ParametricPlot[{Sin[3 t] Cos[3 t], Sin[2 t] Cos[3 t]}, {t, 0,
+  2 \[Pi]}]
