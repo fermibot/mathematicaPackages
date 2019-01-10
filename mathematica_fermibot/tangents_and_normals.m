@@ -59,3 +59,9 @@ tangentPlot[Sin[t] Cos[2 t], Sin[2 t] Cos[2 t]]
 
 ParametricPlot[{Sin[3 t] Cos[3 t], Sin[2 t] Cos[3 t]}, {t, 0,
   2 \[Pi]}]
+
+
+(*Normals file code has been modified and added here*)
+tangentPlot[Cos[2 t] E^(-0.1 t), Sin[2 t] E^(-0.1 t),
+  "NumberOfLines" -> 5000, "ShowNormalsOnly" -> True,
+  "NormalColor" -> Green]
