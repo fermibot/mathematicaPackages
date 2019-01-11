@@ -3,7 +3,8 @@ ClearAll[tangentPlot]
 Options[tangentPlot] = {"TangentColor" -> Hue@0.5,
   "TangentOpacity" -> 0.04, "NumberOfLines" -> 10000,
   ImageSize -> 788, Background -> Black, "ShowNormalsOnly" -> False,
-  "NormalColor" -> Hue[0.5], "NormalOpacity" -> 0.04};
+  "NormalColor" -> Hue[0.5], "NormalOpacity" -> 0.04,
+  "NormalFactor" -> 0.5, "TangentFactor" -> 0.5};
 
 tangentPlot[rxIn_, ryIn_, OptionsPattern[]] := Module[
   {number = OptionValue["NumberOfLines"], tang, norm, rx, ry,
@@ -20,22 +21,26 @@ tangentPlot[rxIn_, ryIn_, OptionsPattern[]] := Module[
       Graphics[{OptionValue["TangentColor"],
         Opacity[OptionValue["TangentOpacity"]],
         Line[Flatten[
-          Table[{{rx[t], ry[t]}, {rx[t], ry[t]} + tang}, {t,
+          Table[{{rx[t], ry[t]}, {rx[t], ry[t]} +
+              OptionValue["TangentFactor"] tang}, {t,
             Divide[2 \[Pi], number], 2 \[Pi], Divide[2 \[Pi], number]}],
           0]]}];
   normalGraphics =
-      Graphics[{LightBlue, Opacity[OptionValue["NormalOpacity"]],
+      Graphics[{OptionValue["NormalColor"],
+        Opacity[OptionValue["NormalOpacity"]],
         Line[Flatten[
-          Table[{{rx[t], ry[t]}, {rx[t], ry[t]} + norm}, {t,
+          Table[{{rx[t], ry[t]}, {rx[t], ry[t]} +
+              OptionValue["NormalFactor"] norm}, {t,
             Divide[2 \[Pi], number], 2 \[Pi], Divide[2 \[Pi], number]}],
           0]]}];(*Normal*)
 
-  Show[a,
+  Show[curvePlot,
     If[OptionValue["ShowNormalsOnly"], normalGraphics,
       tangentGraphics], PlotRange -> All,
     Background -> OptionValue[Background],
     ImageSize -> OptionValue[ImageSize]]
 ]
+
 
 tangentPlot[(3 + 1.5 Sin[3 t]) Sin[t], (3 + 1.5 Sin[3 t]) Cos[t],
   "NumberOfLines" -> 10000]
@@ -62,6 +67,18 @@ ParametricPlot[{Sin[3 t] Cos[3 t], Sin[2 t] Cos[3 t]}, {t, 0,
 
 
 (*Normals file code has been modified and added here*)
-tangentPlot[Cos[2 t] E^(-0.1 t), Sin[2 t] E^(-0.1 t),
+tangentPlot[Cos[2 t] Power[E, -0.1 t], Sin[2 t] Power[E, -0.1 t],
   "NumberOfLines" -> 5000, "ShowNormalsOnly" -> True,
   "NormalColor" -> Green]
+
+tangentPlot[Cos[2 t + t] Power[E, -0.1 t],
+  Sin[2 t + t] Power[E, -0.1 t]]
+
+tangentPlot[(3 + Sin[3 t]) Sin[t], (3 + Sin[3 t]) Cos[t],
+  "ShowNormalsOnly" -> True, "NumberOfLines" -> 5000]
+
+tangentPlot[(5 + Sin[5 t]) Sin[t], (5 + Sin[5 t]) Cos[t],
+  "ShowNormalsOnly" -> True, "NumberOfLines" -> 5000,
+  "NormalColor" -> Hue[0.55], "NormalOpacity" -> 0.2,
+  "NormalFactor" -> 0.2]
+
