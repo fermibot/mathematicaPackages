@@ -3,49 +3,53 @@
 (* :Author: Alcatraz *)
 (* :Date: 2019-01-12 *)
 
-SeedRandom[1]; list = {{0, 0, 0}};
-Table[AppendTo[list,
-  Table[r = RandomReal[{-0.001, 0.001}];
-  Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r], {3}]], 20];
-Framed@TableForm[list,
-  TableHeadings -> {None, {Style["Column 01", Darker[Green]],
-    Style["Column 02", Blue], Style["Column 03", Pink]}}]
+SeedRandom[1];
+Module[{list = {{0, 0, 0}}},
+  Table[AppendTo[list,
+    Table[r = RandomReal[{-0.001, 0.001}];
+    Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r], {3}]], 20];
+  Framed@TableForm[list,
+    TableHeadings -> {None, {Style["Column 01", Darker[Green]],
+      Style["Column 02", Blue], Style["Column 03", Pink]}}]]
+
+SeedRandom[1];
+Module[{list = {{0, 0, 0}}},
+  Table[AppendTo[list,
+    Table[r = RandomReal[{-0.001, 0.001}];
+    Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r], {3}]], 200];
+  ListLinePlot[{Table[Max[list[[n]]], {n, 1, Length[list]}],
+    Table[Min[list[[n]]], {n, 1, Length[list]}]}, ImageSize -> 1000,
+    PlotStyle -> Thickness[0], Mesh -> All,
+    MeshStyle -> {PointSize[0.002]}]]
 
 SeedRandom[1]; list = {{0, 0, 0}};
-Table[AppendTo[list,
-  Table[r = RandomReal[{-0.001, 0.001}];
-  Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r], {3}]], 200];
-ListLinePlot[{Table[Max[list[[n]]], {n, 1, Length[list]}],
-  Table[Min[list[[n]]], {n, 1, Length[list]}]}, ImageSize -> 1000,
-  PlotStyle -> Thickness[0], Mesh -> All,
-  MeshStyle -> {PointSize[0.002]}]
+Module[{list = {{0, 0, 0}}},
+  Table[AppendTo[list,
+    Table[r = RandomReal[{-0.001, 0.001}];
+    Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r], {3}]], 20];
+  Framed@TableForm[list,
+    TableHeadings -> {None, {Style["Column 01", Darker[Green]],
+      Style["Column 02", Blue], Style["Column 03", Pink]}}]]
 
-SeedRandom[1]; list = {{0, 0, 0}};
-Table[AppendTo[list,
-  Table[r = RandomReal[{-0.001, 0.001}];
-  Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r], {3}]], 20];
-Framed@TableForm[list,
-  TableHeadings -> {None, {Style["Column 01", Darker[Green]],
-    Style["Column 02", Blue], Style["Column 03", Pink]}}]
+Module[{list = {{0, 0, 0}}},
+  Table[AppendTo[list,
+    Table[r = RandomReal[{-0.1, 0.1}];
+    Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r], {3}]], 1200];
+  ListLinePlot[{Table[Max[list[[n]]], {n, 1, Length[list]}],
+    Table[Min[list[[n]]], {n, 1, Length[list]}]}, ImageSize -> 1000,
+    PlotStyle -> Thickness[0], Mesh -> All,
+    MeshStyle -> {PointSize[0.002]}]]
 
-list = {{0, 0, 0}};
-Table[AppendTo[list,
-  Table[r = RandomReal[{-0.1, 0.1}];
-  Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r], {3}]], 1200];
-ListLinePlot[{Table[Max[list[[n]]], {n, 1, Length[list]}],
-  Table[Min[list[[n]]], {n, 1, Length[list]}]}, ImageSize -> 1000,
-  PlotStyle -> Thickness[0], Mesh -> All,
-  MeshStyle -> {PointSize[0.002]}]
-
-SeedRandom[1]; list = {{0, 0, 0}};
-Table[AppendTo[list,
-  Table[r = RandomReal[{-0.001, 0.001}];
-  If[RandomReal[] < .1,
-    Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r],
-    Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r]], {3}]], 20];
-Framed@TableForm[list,
-  TableHeadings -> {None, {Style["Column 01", Darker[Green]],
-    Style["Column 02", Blue], Style["Column 03", Pink]}}]
+SeedRandom[1];
+Module[{list = {{0, 0, 0}}},
+  Table[AppendTo[list,
+    Table[r = RandomReal[{-0.001, 0.001}];
+    If[RandomReal[] < .1,
+      Min[Last[list]] + If[r + Min[Last[list]] < 0, 0, r],
+      Max[Last[list]] + If[r + Max[Last[list]] < 0, 0, r]], {3}]], 20];
+  Framed@TableForm[list,
+    TableHeadings -> {None, {Style["Column 01", Darker[Green]],
+      Style["Column 02", Blue], Style["Column 03", Pink]}}]]
 
 (*
 First Arg   : population size,
