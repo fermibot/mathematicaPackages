@@ -16,3 +16,8 @@ Module[{export},
             FileNames["*png", NotebookDirectory[]]] + 1, 2, "0"] <> ".png",
     export]
 ]
+
+
+Graphics[Table[{Hue[Divide[n, 25 Pi]], Opacity[0.02],
+  Disk[{Sin[n], Cos[n]}, 0.5]}, {n, 0.01 \[Pi], 2 \[Pi],
+  0.01 \[Pi]}]]
