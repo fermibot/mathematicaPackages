@@ -52,9 +52,11 @@ CeilingSquarer[x_?NIntegerQ] := Ceiling[x]^2
 
 Squarer[2]
 
-Plot[{x^2, Squarer[x], FloorSquarer[x], CeilingSquarer[x]}, {x, -10,
-  10}, PlotLegends -> "Expressions", Exclusions -> None,
-  Filling -> Axis, FillingStyle -> Lighter@LightBlue]
+Plot[{x^2, Squarer[x], FloorSquarer[x], CeilingSquarer[x]}, {x, -10, 10},
+  PlotLegends -> "Expressions",
+  Exclusions -> None,
+  Filling -> Axis,
+  FillingStyle -> Lighter@LightBlue]
 
 MyFunction[x__] := x;
 MyFunction[1, 2, 3]
