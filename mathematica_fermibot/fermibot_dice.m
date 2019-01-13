@@ -2,6 +2,7 @@
 (* Created by Mathematica Plugin for IntelliJ IDEA *)
 (* :Author: Alcatraz *)
 (* :Date: 2019-01-12 *)
+(* :OriginalCreationDate: 2017-03-01 *)
 
 u16807[iseed_] := Mod[(iseed) * 16807, 2147483647];
 dice[u_] := If[u <= 1 / 6, 1,
