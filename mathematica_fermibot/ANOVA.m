@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2017-02-04 *)
+
 text = "Data Generation";
 a = Graphics[Text[Style[text, 30, Brown, Opacity[0.7]]],
   Background -> Lighter[LightBlue], PlotRange -> {{-3, 3}, {-1, 1}}]

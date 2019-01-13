@@ -2,6 +2,7 @@
 (* Created by Mathematica Plugin for IntelliJ IDEA *)
 (* :Author: Alcatraz *)
 (* :Date: 2019-01-12 *)
+(* :OriginalCreationDate: 2017-06-08 *)
 
 img = ImageData[ExampleData[{"TestImage", "Girl3"}]];
 imgdim = Dimensions[img]

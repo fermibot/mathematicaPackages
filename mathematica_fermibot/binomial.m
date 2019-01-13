@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2018-07-04 *)
+
 ClearAll[binomialStep];
 binomialStep[list_List] := Module[{xPos, yPos},
   xPos = Accumulate[{0}~Join~

@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 0000-00-00 *)
+
 t = 200;
 Graphics[Table[{Opacity[5 / t], LightBlue,
   EdgeForm[{Blue, Opacity[0.1]}],

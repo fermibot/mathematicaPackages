@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2018-02-19 *)
+
 Module[{sequences, alive, replacer},
   alive[1] := Style[1, Darker@Hue[0.3], 10];
   alive[0] := Style[0, Red, 10];

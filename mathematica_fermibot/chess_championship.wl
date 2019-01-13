@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2019-01-05 *)
+
 ClearAll[twoPlayersGame]
 
 twoPlayersGame[player1_, player2_] :=

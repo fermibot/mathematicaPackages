@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2018-08-21 *)
+
 ListLinePlot[{Sin[Prime@199 # \[Degree]],
   Cos[Prime@198 # \[Degree]]} & /@ Range[0, 360, #],
   AspectRatio -> 1, ImageSize -> 200,

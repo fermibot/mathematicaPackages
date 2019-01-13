@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2016-06-22 *)
+
 Histogram3D[
  Table[{RandomReal[] RandomReal[], RandomReal[] RandomReal[]}, {n, 1,
    100000}], ImageSize -> 1000]

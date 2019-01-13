@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: xxxx-xx-xx *)
+
 (*Random Art Part 01*)
 Graphics[Table[{Opacity[0.5], Hue[n / 10],
   Rotate[Rectangle[{Sin[n], Sin[n]}, {Cos[n], Cos[n]}], (2 \[Pi] n) /

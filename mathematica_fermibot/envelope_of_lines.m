@@ -1,3 +1,5 @@
+(* :OriginalCreationDate: 2019-01-05 *)
+
 Manipulate[
   Graphics[{Thickness@0, Opacity@0.5,
     Line[{{Sin[#], Cos[#]}, {Sin[# - r \[Pi]],
