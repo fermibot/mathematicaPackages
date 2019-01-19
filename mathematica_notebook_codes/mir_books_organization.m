@@ -16,3 +16,30 @@ Module[
       MemberQ[mirmir, #], MemberQ[mirnew, #],
       MemberQ[mirold, #]} & /@ mirmir), Range@Length@mirmir}]]
 ]
+
+
+
+Needs["DatabaseLink`"]
+Module[{db =
+    OpenSQLConnection[
+      JDBC["SQLite",
+        "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
+Collections.db"]], dbAuthors, authors, names},
+  dbAuthors = SQLExecute[db, "SELECT * FROM main.authors"];
+  authors =
+      Rest@Rest@StringSplit[StringDelete[#, ".pdf" | ".djvu"], " - "] & /@
+          FileNames["Science for*" | "Science For*", "D:\\Mir Books"] //
+          Union @@ # &;
+  names = (If[
+    StringContainsQ[#, "."],
+    Module[{position =
+        Last[StringPosition[#, "."]][[2]]}, {StringTake[#, position],
+      StringDrop[#, position]}],
+    StringSplit[#, " "]] & /@ authors);
+  MapThread[{#1} ~ Join ~ #2 &, {authors, names}];
+
+  dbAuthors = #[[2]] <> #[[3]] & /@ dbAuthors;
+
+  Export[StringReplace[NotebookFileName[], ".nb" -> ".xlsx"], names]
+
+]
