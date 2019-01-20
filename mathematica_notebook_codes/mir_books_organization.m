@@ -43,3 +43,22 @@ Collections.db"]], dbAuthors, authors, names},
   Export[StringReplace[NotebookFileName[], ".nb" -> ".xlsx"], names]
 
 ]
+
+Module[{db =
+   OpenSQLConnection[
+    JDBC["SQLite",
+     "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
+Collections.db"]], dbAuthors, authors, names},
+ dbAuthors = SQLExecute[db,
+    "
+    SELECT
+      bookName Book
+    , firstName || lastName as Author
+    , series BookSeries
+    from books
+    left outer join authorBook a on books.bookID = a.bookFK
+    left outer join authors on authorFK = authorID
+    ORDER BY Author
+    ", "ShowColumnHeadings" -> True] //
+   Grid[#, Frame -> All, Alignment -> Left] &
+ ]
