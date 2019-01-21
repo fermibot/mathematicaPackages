@@ -45,11 +45,11 @@ Collections.db"]], dbAuthors, authors, names},
 ]
 
 Module[{db =
-   OpenSQLConnection[
-    JDBC["SQLite",
-     "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
+    OpenSQLConnection[
+      JDBC["SQLite",
+        "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
 Collections.db"]], dbAuthors, authors, names},
- dbAuthors = SQLExecute[db,
+  dbAuthors = SQLExecute[db,
     "
     SELECT
       bookName Book
@@ -60,5 +60,18 @@ Collections.db"]], dbAuthors, authors, names},
     left outer join authors on authorFK = authorID
     ORDER BY Author
     ", "ShowColumnHeadings" -> True] //
-   Grid[#, Frame -> All, Alignment -> Left] &
- ]
+      Grid[#, Frame -> All, Alignment -> Left] &
+]
+
+Module[{db =
+    OpenSQLConnection[
+      JDBC["SQLite",
+        "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
+Collections.db"]], dbAuthors, authors, names},
+  dbAuthors =
+      SQLExecute[db,
+        "SELECT * FROM coinCollection ORDER BY coinSeries, coinName",
+        "ShowColumnHeadings" -> True];
+  Grid[dbAuthors, Frame -> All, Alignment -> Left]
+(*SQLExecute[db,"SELECT MAX(coinId)+1 FROM coinCollection"]*)
+]
