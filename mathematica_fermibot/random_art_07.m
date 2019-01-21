@@ -44,3 +44,18 @@ Module[{export},
   Export[exportFileName, export];
 ]
 
+
+Module[{export},
+  export =
+      Module[{iterations = 2000},
+        iterations =
+            Graphics[
+              Table[Rotate[{EdgeForm[{Black, Opacity[0.2], Thickness[0.001]}],
+                FaceForm[{Hue[0.4], Opacity@0.02}],
+                Rectangle[{Cos[t], Sin[t]},
+                  Reverse@{Sin[t] Cos[t], Sin[t] Cos[t]}]}, t], {t,
+                Divide[2 \[Pi], iterations], 2 \[Pi],
+                Divide[2 \[Pi], iterations]}], ImageSize -> 788]];
+  (*Export[exportFileName,export]*);
+  export
+]
