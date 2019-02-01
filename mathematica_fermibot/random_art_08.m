@@ -12,3 +12,5 @@ Graphics[Table[{Opacity@0.2, Thickness@0, Hue[RandomReal[{0.5, 0.7}]],
   BezierCurve[r + # & /@ RandomReal[0.1 {-1, 1}, {10, 2}]]}, {r,
   Table[{RandomReal[{-1, 1}], RandomReal[{-0.5, 0.5}]}, 10000]}],
   ImageSize -> 788]
+
+

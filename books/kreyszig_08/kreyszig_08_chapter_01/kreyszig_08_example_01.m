@@ -1,0 +1,1 @@
+DSolve[y'[t] == 10 - Divide[5, 200] y[t], y[t], t]
