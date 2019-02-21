@@ -36,15 +36,34 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
 
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
-  colorSeparate},
-  image = ImageData[
-    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
-  colorSeparate = ColorSeparate[Image[image]];
-  Grid[{
-    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Soft", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
-    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Hard", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
-    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Firm", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
-    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"PiecewiseGarrote", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
-    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"SmoothGarrote", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate
-  }]
+  colorSeparate, imageSize = ImageSize -> 150,
+  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"}},
+  Grid@Partition[
+    image = ImageData[
+      ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+    colorSeparate = ColorSeparate[Image[image]];
+    Table[Framed@Grid[{
+      Image[
+        ColorNegate@
+            ImageSubtract[#, Threshold[#, {"Soft", \[Delta]}]],
+        imageSize] & /@ colorSeparate,
+      Image[
+        ColorNegate@
+            ImageSubtract[#, Threshold[#, {"Hard", \[Delta]}]],
+        imageSize] & /@ colorSeparate,
+      Image[
+        ColorNegate@
+            ImageSubtract[#, Threshold[#, {"Firm", \[Delta]}]],
+        imageSize] & /@ colorSeparate,
+      Image[
+        ColorNegate@
+            ImageSubtract[#,
+              Threshold[#, {"PiecewiseGarrote", \[Delta]}]],
+        imageSize] & /@ colorSeparate,
+      Image[
+        ColorNegate@
+            ImageSubtract[#,
+              Threshold[#, {"SmoothGarrote", \[Delta]}]],
+        imageSize] & /@ colorSeparate
+    }], {\[Delta], delta}] ~ Join ~ {Null}, 3]
 ]
