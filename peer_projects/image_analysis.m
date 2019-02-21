@@ -35,63 +35,46 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
 ]
 
 
-Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
-  colorSeparate, imageSize = ImageSize -> 150,
-  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"}},
-  Grid@Partition[
-    image = ImageData[
-      ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
-    colorSeparate = ColorSeparate[Image[image]];
-    Table[Framed@Grid[{
-      Image[
-        ColorNegate@
-            ImageSubtract[#, Threshold[#, {"Soft", \[Delta]}]],
-        imageSize] & /@ colorSeparate,
-      Image[
-        ColorNegate@
-            ImageSubtract[#, Threshold[#, {"Hard", \[Delta]}]],
-        imageSize] & /@ colorSeparate,
-      Image[
-        ColorNegate@
-            ImageSubtract[#, Threshold[#, {"Firm", \[Delta]}]],
-        imageSize] & /@ colorSeparate,
-      Image[
-        ColorNegate@
-            ImageSubtract[#,
-              Threshold[#, {"PiecewiseGarrote", \[Delta]}]],
-        imageSize] & /@ colorSeparate,
-      Image[
-        ColorNegate@
-            ImageSubtract[#,
-              Threshold[#, {"SmoothGarrote", \[Delta]}]],
-        imageSize] & /@ colorSeparate
-    }], {\[Delta], delta}] ~ Join ~ {Null}, 3]
+Module[{
+  images = FileNames["*jpg", NotebookDirectory[]], image,
+  colorSeparate, imageSize = ImageSize -> 100,
+  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"},
+  tfun = {"Soft", "Hard", "Firm", "PiecewiseGarrote",
+    "SmoothGarrote"}},
+  image = ImageData[
+    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  colorSeparate = ColorSeparate[Image[image]];
+  Table[Framed@
+      Grid[Table[
+        Image[ColorNegate@
+            ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]],
+          imageSize] & /@ colorSeparate, {\[Phi], tfun}]], {\[Delta],
+    delta}]
 ]
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
-  colorSeparate, imageSize = ImageSize -> 250,
-  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"}},
+  colorSeparate, imageSize = ImageSize -> 100,
+  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"},
+  tfun = {"Soft", "Hard", "Firm", "PiecewiseGarrote",
+    "SmoothGarrote"}},
   image = ImageData[
     ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
   colorSeparate = ColorSeparate[Image[image]] // Last;
-  Grid@Table[{
-    Image[
-      ColorNegate@ImageSubtract[#, Threshold[#, {"Soft", \[Delta]}]],
-      imageSize] &[colorSeparate],
-    Image[
-      ColorNegate@ImageSubtract[#, Threshold[#, {"Hard", \[Delta]}]],
-      imageSize] &[colorSeparate],
-    Image[
-      ColorNegate@ImageSubtract[#, Threshold[#, {"Firm", \[Delta]}]],
-      imageSize] &[colorSeparate],
-    Image[
-      ColorNegate@
-          ImageSubtract[#,
-            Threshold[#, {"PiecewiseGarrote", \[Delta]}]], imageSize] &[
-      colorSeparate],
-    Image[
-      ColorNegate@
-          ImageSubtract[#, Threshold[#, {"SmoothGarrote", \[Delta]}]],
-      imageSize] &[colorSeparate]
-  }, {\[Delta], delta}]
+  Row@{
+    Framed@
+        TableForm[
+          Table[Tooltip[
+            Image[ColorNegate@
+                ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]],
+              imageSize], StringJoin @@ {\[Phi], " ", \[Delta]}] &[
+            colorSeparate], {\[Phi], tfun}, {\[Delta], delta}],
+          TableHeadings -> {tfun, delta}, TableAlignments -> Center],
+    "\t\t",
+    Framed@
+        TableForm[
+          Table[Tooltip[
+            Image[ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]],
+              imageSize], StringJoin @@ {\[Phi], " ", \[Delta]}] &[
+            colorSeparate], {\[Phi], tfun}, {\[Delta], delta}],
+          TableHeadings -> {tfun, delta}, TableAlignments -> Center]}
 ]
