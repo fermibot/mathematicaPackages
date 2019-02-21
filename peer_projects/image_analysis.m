@@ -67,3 +67,31 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
         imageSize] & /@ colorSeparate
     }], {\[Delta], delta}] ~ Join ~ {Null}, 3]
 ]
+
+Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
+  colorSeparate, imageSize = ImageSize -> 250,
+  delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"}},
+  image = ImageData[
+    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  colorSeparate = ColorSeparate[Image[image]] // Last;
+  Grid@Table[{
+    Image[
+      ColorNegate@ImageSubtract[#, Threshold[#, {"Soft", \[Delta]}]],
+      imageSize] &[colorSeparate],
+    Image[
+      ColorNegate@ImageSubtract[#, Threshold[#, {"Hard", \[Delta]}]],
+      imageSize] &[colorSeparate],
+    Image[
+      ColorNegate@ImageSubtract[#, Threshold[#, {"Firm", \[Delta]}]],
+      imageSize] &[colorSeparate],
+    Image[
+      ColorNegate@
+          ImageSubtract[#,
+            Threshold[#, {"PiecewiseGarrote", \[Delta]}]], imageSize] &[
+      colorSeparate],
+    Image[
+      ColorNegate@
+          ImageSubtract[#, Threshold[#, {"SmoothGarrote", \[Delta]}]],
+      imageSize] &[colorSeparate]
+  }, {\[Delta], delta}]
+]
