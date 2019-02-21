@@ -108,9 +108,11 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
   colorSeparate, imageSize = ImageSize -> 100, image1, image2,
-  meniscus},
-  image = ImageData[
-    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  meniscus, sansMenicus},
+  image = ImageTrim[
+    Import[Last@images], {{395, 1114}, {3059,
+      2122}}](*ImageData[ImageTrim[Import[images[[3]]],{{1150,1375},{\
+1350,1500}}]]*);
   Print[Image@image];
   colorSeparate = ColorSeparate[Image[image]] // Last;
   image1 =
@@ -123,7 +125,10 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
             Threshold[#, {"PiecewiseGarrote", "MinimumError"}]],
         imageSize] &[colorSeparate];
   meniscus = ImageSubtract[image1, image2];
-  Row[Image[#, ImageSize -> 150] & /@ {meniscus, image1, image2,
-    ImageSubtract[ColorNegate@image1, image2],
-    ImageSubtract[ColorNegate@meniscus, image2]}]
+  sansMenicus =
+      ImageSubtract[image2, ImageSubtract[image1, ColorNegate@meniscus]];
+  Image[#, ImageSize -> 500] & /@ {meniscus, sansMenicus, image1,
+    image2, ImageSubtract[ColorNegate@image1, image2],
+    ImageSubtract[ColorNegate@meniscus, image2]}
+]
 ]
