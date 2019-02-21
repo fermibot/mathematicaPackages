@@ -36,16 +36,15 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
 
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
-  reImage1, reImage2},
-  image = (*ImageTrim[Import[images[[3]]],{{1150,1114},{1350,2122}}]*)
-      ImageData[
-        ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  colorSeparate},
+  image = ImageData[
+    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  colorSeparate = ColorSeparate[Image[image]];
   Grid[{
-    Image[ColorNegate@
-        ImageSubtract[#, Threshold[#, {"Soft", "Cluster"}]],
-      ImageSize -> Medium] & /@ ColorSeparate[Image[image]],
-    Image[ColorNegate@
-        ImageSubtract[#, Threshold[#, {"Hard", "Cluster"}]],
-      ImageSize -> Medium] & /@ ColorSeparate[Image[image]]
+    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Soft", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Hard", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"Firm", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"PiecewiseGarrote", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@ImageSubtract[#, Threshold[#, {"SmoothGarrote", "Cluster"}]], ImageSize -> Small] & /@ colorSeparate
   }]
 ]
