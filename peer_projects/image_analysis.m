@@ -44,13 +44,15 @@ Module[{
   image = ImageData[
     ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
   colorSeparate = ColorSeparate[Image[image]];
-  Table[Framed@
-      Grid[Table[
-        Image[ColorNegate@
+  Row@Table[
+    Framed@Grid[
+      Table[Image[
+        ColorNegate@
             ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]],
-          imageSize] & /@ colorSeparate, {\[Phi], tfun}]], {\[Delta],
-    delta}]
+        imageSize] & /@ colorSeparate, {\[Phi], tfun}]], {\[Delta],
+      delta}]
 ]
+
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
   colorSeparate, imageSize = ImageSize -> 100,
@@ -73,7 +75,8 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
     Framed@
         TableForm[
           Table[Tooltip[
-            Image[ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]],
+            Image[Inpaint[Image@image,
+              ImageSubtract[#, Threshold[#, {\[Phi], \[Delta]}]]],
               imageSize], StringJoin @@ {\[Phi], " ", \[Delta]}] &[
             colorSeparate], {\[Phi], tfun}, {\[Delta], delta}],
           TableHeadings -> {tfun, delta}, TableAlignments -> Center]}
