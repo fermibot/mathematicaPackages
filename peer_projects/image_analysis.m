@@ -34,6 +34,30 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
       Nest[Threshold[Blur[#], {"Hyperbola"}] &, image, 6]]], 10]
 ]
 
+Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
+  colorSeparate},
+  image = ImageData[
+    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  colorSeparate = ColorSeparate[Image[image]];
+  Grid[{
+    Image[ColorNegate@
+        ImageSubtract[#, Threshold[#, {"Soft", "Cluster"}]],
+      ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@
+        ImageSubtract[#, Threshold[#, {"Hard", "Cluster"}]],
+      ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@
+        ImageSubtract[#, Threshold[#, {"Firm", "Cluster"}]],
+      ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@
+        ImageSubtract[#,
+          Threshold[#, {"PiecewiseGarrote", "Cluster"}]],
+      ImageSize -> Small] & /@ colorSeparate,
+    Image[ColorNegate@
+        ImageSubtract[#, Threshold[#, {"SmoothGarrote", "Cluster"}]],
+      ImageSize -> Small] & /@ colorSeparate
+  }]
+]
 
 Module[{
   images = FileNames["*jpg", NotebookDirectory[]], image,
@@ -53,7 +77,6 @@ Module[{
       delta}]
 ]
 
-
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
   colorSeparate, imageSize = ImageSize -> 100,
   delta = {"Cluster", "Entropy", "Mean", "Median", "MinimumError"},
@@ -61,6 +84,7 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
     "SmoothGarrote"}},
   image = ImageData[
     ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  Print[Image@image];
   colorSeparate = ColorSeparate[Image[image]] // Last;
   Row@{
     Framed@
