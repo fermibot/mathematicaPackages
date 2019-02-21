@@ -105,3 +105,25 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
             colorSeparate], {\[Phi], tfun}, {\[Delta], delta}],
           TableHeadings -> {tfun, delta}, TableAlignments -> Center]}
 ]
+
+Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
+  colorSeparate, imageSize = ImageSize -> 100, image1, image2,
+  meniscus},
+  image = ImageData[
+    ImageTrim[Import[images[[3]]], {{1150, 1375}, {1350, 1500}}]];
+  Print[Image@image];
+  colorSeparate = ColorSeparate[Image[image]] // Last;
+  image1 =
+      Image[ColorNegate@
+          ImageSubtract[#, Threshold[#, {"Firm", "MinimumError"}]],
+        imageSize] &[colorSeparate];
+  image2 =
+      Image[ColorNegate@
+          ImageSubtract[#,
+            Threshold[#, {"PiecewiseGarrote", "MinimumError"}]],
+        imageSize] &[colorSeparate];
+  meniscus = ImageSubtract[image1, image2];
+  Row[Image[#, ImageSize -> 150] & /@ {meniscus, image1, image2,
+    ImageSubtract[ColorNegate@image1, image2],
+    ImageSubtract[ColorNegate@meniscus, image2]}]
+]
