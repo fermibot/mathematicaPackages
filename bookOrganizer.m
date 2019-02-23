@@ -47,14 +47,16 @@ bookRename[bookNameIn_?stringContainsMountainQ] :=
     Module[
       {authorName = "Christoph Schiller",
         bookName = "Motion Mountain",
-        directory, extension,
+        directory, splitPath, extension, bookStub,
         volumeNumber},
-      directory = Drop[StringSplit[bookNameIn, "\\"], -1];
-      Print@directory;
-      Print@extension;
-      Abort[];
-      volumeNumber = ToString@volumeNumberExtract[bookNameIn];
-      StringJoin @@ {bookName, " ", volumeNumber, " - ", authorName}
+      splitPath = StringSplit[bookNameIn, "\\"];
+      directory = stringJoinBuffer[Drop[splitPath, -1], "\\"] <> "\\";
+      bookStub = StringSplit[Last@splitPath, "."];
+      extension = Last@bookStub;
+      bookStub = stringJoinBuffer[Drop[bookStub, -1], "."];
+      volumeNumber = ToString@volumeNumberExtract[bookStub];
+      bookStub = StringJoin @@ {bookName, " ", volumeNumber, " - ", authorName};
+      stringJoinBuffer[{directory, bookStub}, "\\"] <> "." <> extension
     ];
 
 bookRename[bookName_?NumberQ] := Null;
