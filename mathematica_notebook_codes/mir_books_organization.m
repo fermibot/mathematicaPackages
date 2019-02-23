@@ -44,34 +44,36 @@ Collections.db"]], dbAuthors, authors, names},
 
 ]
 
-Module[{db =
-    OpenSQLConnection[
-      JDBC["SQLite",
-        "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
-Collections.db"]], dbAuthors, authors, names},
-  dbAuthors = SQLExecute[db,
-    "
-    SELECT
-      bookName Book
-    , firstName || lastName as Author
-    , series BookSeries
-    from books
-    left outer join authorBook a on books.bookID = a.bookFK
-    left outer join authors on authorFK = authorID
-    ORDER BY Author
-    ", "ShowColumnHeadings" -> True] //
-      Grid[#, Frame -> All, Alignment -> Left] &
+Module[{authors, names},
+  authors =
+      Rest@Rest@(StringSplit[StringDelete[#, ".pdf" | ".djvu"], " - "] & /@
+          FileNames["Science for*" | "Science For*", "D:\\Mir Books",
+            Infinity] // Union @@ # &);
+  names = (If[
+    StringContainsQ[#, "."],
+    Module[{position =
+        Last[StringPosition[#, "."]][[2]]}, {StringTake[#, position],
+      StringDrop[#, position]}],
+    StringSplit[#, " "]] & /@ authors);
+  MapThread[{#1} ~ Join ~ #2 &, {authors, names}];
+  names
 ]
 
 Module[{db =
     OpenSQLConnection[
-      JDBC["SQLite",
-        "D:\\Programming\\python\\PyCharm\\mathematicaPython\\\
-Collections.db"]], dbAuthors, authors, names},
-  dbAuthors =
-      SQLExecute[db,
-        "SELECT * FROM coinCollection ORDER BY coinSeries, coinName",
-        "ShowColumnHeadings" -> True];
-  Grid[dbAuthors, Frame -> All, Alignment -> Left]
-(*SQLExecute[db,"SELECT MAX(coinId)+1 FROM coinCollection"]*)
+      JDBC["SQLite", "D:\\Programming\\_databases\\collections.db"]],
+  data},
+  data = SQLExecute[db, "
+   SELECT numismatics_master.denominationName,
+          numismatics_master.denominationYear,
+          numismatics_series.denominationSeries
+   FROM numismatics_master
+          LEFT OUTER JOIN numismatics_series
+                          ON numismatics_master.denominationSeriesId \
+= numismatics_series.denominationSeriesId
+   WHERE numismatics_master.denominationName LIKE '%p%'
+   ORDER BY denominationSeries, denominationYear
+
+   ", "ShowColumnHeadings" -> True];
+  Grid[data, Frame -> All, Alignment -> Left]
 ]
