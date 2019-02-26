@@ -108,7 +108,7 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
 
 Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
   colorSeparate, imageSize = ImageSize -> 600, image1, image2,
-  meniscus, sansMenicus},
+  meniscus, sansMenicus, image3, image4, image5, image6, image7},
   image = ImageTrim[Import[images[[2]]], {{395, 1114}, {3059, 2122}}];
   colorSeparate = ColorSeparate[Image[image]] // Last;
   image1 =
@@ -124,18 +124,17 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
   sansMenicus =
       ImageDifference[image,
         ImageDifference[image1, ColorNegate@meniscus]];
+  image3 = Nest[Closing[#, DiskMatrix[1]] &, meniscus, 4];
+  image4 = Threshold[image2, {"PiecewiseGarrote", "MinimumError"}];
+  image5 =
+      Nest[Threshold[#, {"PiecewiseGarrote", "MinimumError"}] &,
+        ImageSubtract[ColorNegate@image1, image2], 8];
+  image6 = ImageDifference[ColorNegate@meniscus, image2];
+  image7 =
+      Binarize@ImageDifference[ColorNegate@image,
+        ImageDifference[image2, meniscus]];
   Image[#, imageSize] & /@
-      {image,
-        Nest[Closing[#, DiskMatrix[1]] &, meniscus, 4],
-        sansMenicus,
-        image1,
-        Threshold[image2, {"PiecewiseGarrote", "MinimumError"}],
-        Nest[Threshold[#, {"PiecewiseGarrote", "MinimumError"}] &,
-          ImageSubtract[ColorNegate@image1, image2], 8],
-        ImageDifference[ColorNegate@meniscus, image2],
-        Binarize@
-            ImageDifference[ColorNegate@image,
-              ImageDifference[image2, meniscus]]
-      } // Grid@Partition[#, 4] &
+      {image, image3, sansMenicus, image1, image4, image5, image6,
+        image7} // Grid@Partition[#, 4] &
 
 ]
