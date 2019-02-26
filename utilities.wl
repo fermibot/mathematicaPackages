@@ -17,6 +17,7 @@ QuickSort::usage = "Fermibot's Mathematica implementation of Quick-Sort algorith
 QuickSortTrack::usage = "It's again QuickSort but it shows the progress of the sorting mechanism";
 pivotedList::usage = "Supporting function needed for QuickSort";
 
+FactorialRecursive::usage = "Factorial calculated using recursion";
 
 Begin["Private`"];
 Needs["qFunctions`"];
@@ -107,6 +108,10 @@ QuickSort[listIn_List] := Module[{list = {listIn}, pivotOut},
   Return@list
 ];
 
+FactorialRecursive[n_] :=
+    Module[{result},
+      If[n == 1, result = 1, result = FactorialRecursive = n * FactorialRecursive[n - 1]];
+      result];
 
 End[];
 
