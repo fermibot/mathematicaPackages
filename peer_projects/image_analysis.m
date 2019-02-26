@@ -131,10 +131,12 @@ Module[{images = FileNames["*jpg", NotebookDirectory[]], image,
         ImageSubtract[ColorNegate@image1, image2], 8];
   image6 = ImageDifference[ColorNegate@meniscus, image2];
   image7 =
-      Binarize@ImageDifference[ColorNegate@image,
+      ImageDifference[ColorNegate@image,
         ImageDifference[image2, meniscus]];
-  Image[#, imageSize] & /@
+
+  If[# =!= Null, Image[ColorNegate@#, imageSize], Null] & /@
       {image, image3, sansMenicus, image1, image4, image5, image6,
-        image7} // Grid@Partition[#, 4] &
+        image7, ImageDifference[meniscus, image7], Null, Null, Null} //
+      Grid@Partition[#, 4] &
 
 ]
