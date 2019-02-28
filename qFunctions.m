@@ -1,4 +1,3 @@
-
 (* :Title: qFunctions *)
 (* :Context: qFunctions` *)
 (* :Author: Alcatraz *)
@@ -12,11 +11,13 @@
 
 BeginPackage["qFunctions`"];
 
-someListQ::usage="Yields True if any of the elements in the given list are of the form List";
+SomeListQ::usage = "Yields True if any of the elements in the given list are of the form List";
+AllListQ::usage = "Yields True if all of the elements in the given list are of the form List";
 
 Begin["`Private`"];
 
-someListQ[list_List]:=Or@@(ListQ/@list);
+SomeListQ[list_List] := Or @@ (ListQ /@ list);
+AllListQ[list_List] := And @@ (ListQ /@ list);
 
 
 End[]; (* `Private` *)
