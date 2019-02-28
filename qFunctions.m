@@ -1,5 +1,3 @@
-(* Mathematica Package *)
-(* Created by Mathematica Plugin for IntelliJ IDEA *)
 
 (* :Title: qFunctions *)
 (* :Context: qFunctions` *)
@@ -12,16 +10,15 @@
 (* :Keywords: *)
 (* :Discussion: *)
 
-BeginPackage["qFunctions`"]
-(* Exported symbols added here with SymbolName::usage *)
+BeginPackage["qFunctions`"];
 
 someListQ::usage="Yields True if any of the elements in the given list are of the form List";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
 someListQ[list_List]:=Or@@(ListQ/@list);
 
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
-EndPackage[]
+EndPackage[];
