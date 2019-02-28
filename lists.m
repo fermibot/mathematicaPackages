@@ -1,5 +1,3 @@
-(* Mathematica Package *)
-(* Created by Mathematica Plugin for IntelliJ IDEA *)
 
 (* :Title: lists *)
 (* :Context: lists` *)
@@ -12,15 +10,15 @@
 (* :Keywords: *)
 (* :Discussion: *)
 
-BeginPackage["lists`"]
+BeginPackage["lists`"];
 
 listProportion::usage = "Finds the proportion of the element(s) in a given list";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-listProportion[list_List, element_] := Count[list, element] / Length[list]
-listProportion[list_List, elements_List] := Count[list, Alternatives @@ elements] / Length[list]
+listProportion[list_List, element_] := Count[list, element] / Length[list];
+listProportion[list_List, elements_List] := Count[list, Alternatives @@ elements] / Length[list];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
-EndPackage[]
+EndPackage[];
