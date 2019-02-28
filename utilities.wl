@@ -22,7 +22,7 @@ FactorialRecursive::usage = "Factorial calculated using recursion";
 Begin["Private`"];
 Needs["qFunctions`"];
 
-accumulatingMean[list_List] := N[Accumulate[list] / Range[1, Length[list]]]
+accumulatingMean[list_List] := N[Accumulate[list] / Range[1, Length[list]]];
 
 associator[element_] := Association[element -> 1];
 
@@ -36,34 +36,34 @@ associationAppender[associationIn_Association, element_] :=
             association[newEntryKey] + newEntry[newEntryKey];
         association
       ]
-    ]
+    ];
 
 associationAppender[list_List] :=
     Module[{seedAssociation = <||>},
       Table[seedAssociation =
           associationAppender[seedAssociation, list[[r]]], {r, 1,
-        Length@list}]]
+        Length@list}]];
 
 valuesMissing[association_, element_] :=
-    If[Head[association[element]] === Missing, 0, association[element]]
+    If[Head[association[element]] === Missing, 0, association[element]];
 
-unitize[list_List] := N[list / Total[list]]
+unitize[list_List] := N[list / Total[list]];
 unitize[association_Association] := Module[{sortedAssociation = KeySort[association], keys, values},
   keys = Keys[sortedAssociation];
   values = unitize[Values[sortedAssociation]];
   Association[MapThread[{#1 -> #2}&, {keys, values}]]
-]
+];
 
-associateLists[list1_List, list2_List] := Association[MapThread[{#1 -> #2}&, {list1, list2}]]
+associateLists[list1_List, list2_List] := Association[MapThread[{#1 -> #2}&, {list1, list2}]];
 
 associationFunctionMap[associationIn_Association, function_Symbol] :=
     Module[{association = associationIn, keys, values},
       keys = Keys@association; values = function /@ Values@association;
-      associateLists[keys, values]]
+      associateLists[keys, values]];
 
 
-stringJoinStyled[items_List, buffer_ : ""] := Apply[StringJoin, ToString[#, StandardForm] & /@ Riffle[items, buffer]]
-stringJoinBuffer[items_List, buffer_ : ""] := StringJoin @@ Riffle[ToString /@ items, buffer]
+stringJoinStyled[items_List, buffer_ : ""] := Apply[StringJoin, ToString[#, StandardForm] & /@ Riffle[items, buffer]];
+stringJoinBuffer[items_List, buffer_ : ""] := StringJoin @@ Riffle[ToString /@ items, buffer];
 
 
 pivotedList[list_List] :=
