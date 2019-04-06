@@ -41,3 +41,18 @@ Module[{database, data, dataH},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     GridLines -> {data[[1, All, 1]][[;; ;; 5]], Range[0, 500, 10]}]
 ]
+
+
+Module[{database, data, dataH},
+  database = OpenSQLConnection["fitbit"];
+  data = SQLExecute[database, "SELECT * FROM biometricsCalories"];
+  data = Select[{Quiet@stringToTime@#[[1]], #[[2]]} & /@ data,
+    DateObjectQ@#[[1]] &];
+  DateListPlot[data, ImageSize -> 1600, AspectRatio -> 0.4,
+    Frame -> True,
+    FrameTicks -> {data[[All, 1]][[;; ;; 75]], Range[0, 500, 25]},
+    DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
+    GridLines -> {data[[All, 1]][[;; ;; 75]], Range[0, 500, 10]}];
+  data
+
+]
