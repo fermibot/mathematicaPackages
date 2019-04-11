@@ -14,12 +14,14 @@ AshwiniKumarKounduri\\user-site-export\\"},
   First[StringSplit[StringDelete[#, folder], "-"]] & /@
       FileNames["*", folder] // Union // Print;]
 
+
 Module[{database, data, dataH},
   database =
       OpenSQLConnection[
         JDBC["SQLite", "D:\\Programming\\_databases\\fitbitData.db"]];
   data = SQLExecute[database,
-    Import[NotebookDirectory[] <> "activeMinutes.txt"],
+    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
+codes\\fitBitDataAnalysis\\activeMinutes.txt"],
     "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
@@ -34,10 +36,12 @@ Module[{database, data, dataH},
     FrameLabel -> {"", "Time in Minutes"}]
 ]
 
+
 Module[{database, data, dataH},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
-    Import[NotebookDirectory[] <> "defaultZones.txt"]];
+    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
+codes\\fitBitDataAnalysis\\defaultZones.txt"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association@{"IN_DEFAULT_ZONE_1" ->
@@ -56,7 +60,8 @@ Module[{database, data, dataH},
 Module[{database, data, dataH, yMin = 0, yMax = 3, ySteps = 0.1},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
-    Import[NotebookDirectory[] <> "calories.txt"]];
+    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
+codes\\fitBitDataAnalysis\\calories.txt"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association[{"\[Mu] Calories" -> data[[;; , 1 ;; 2]],
@@ -72,10 +77,12 @@ Module[{database, data, dataH, yMin = 0, yMax = 3, ySteps = 0.1},
     FrameLabel -> {"", "Mean Calories"}, InterpolationOrder -> 2]
 ]
 
+
 Module[{database, data, dataH, yMin = 60, yMax = 105, ySteps = 2},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
-    Import[NotebookDirectory[] <> "heartRate.txt"]];
+    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
+codes\\fitBitDataAnalysis\\heartRate.txt"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association[{"\[Mu] HeartRate" -> data[[;; , 1 ;; 2]],
@@ -93,10 +100,12 @@ Module[{database, data, dataH, yMin = 60, yMax = 105, ySteps = 2},
     InterpolationOrder -> 2]
 ]
 
+
 Module[{database, data, dataH, yMin = 0, yMax = 25000, ySteps = 1000},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
-    Import[NotebookDirectory[] <> "steps.txt"]];
+    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
+codes\\fitBitDataAnalysis\\steps.txt"]];
   data = SortBy[{stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@
       data, #[[1]] &];
 
