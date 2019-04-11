@@ -1,0 +1,6 @@
+SELECT CAST(dateTimeID AS VARCHAR) AS dateTimeID,
+       IN_DEFAULT_ZONE_1,
+       IN_DEFAULT_ZONE_2,
+       IN_DEFAULT_ZONE_3,
+       BELOW_DEFAULT_ZONE_1
+FROM timeInHRZones
