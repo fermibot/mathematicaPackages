@@ -21,7 +21,7 @@ Module[{database, data, dataH},
         JDBC["SQLite", "D:\\Programming\\_databases\\fitbitData.db"]];
   data = SQLExecute[database,
     Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
-codes\\fitBitDataAnalysis\\activeMinutes.txt"],
+codes\\fitBitDataAnalysis\\activeMinutes.sql"],
     "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
@@ -41,7 +41,7 @@ Module[{database, data, dataH},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
     Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
-codes\\fitBitDataAnalysis\\defaultZones.txt"]];
+codes\\fitBitDataAnalysis\\defaultZones.sql"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association@{"IN_DEFAULT_ZONE_1" ->
@@ -61,7 +61,7 @@ Module[{database, data, dataH, yMin = 0, yMax = 3, ySteps = 0.1},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
     Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
-codes\\fitBitDataAnalysis\\calories.txt"]];
+codes\\fitBitDataAnalysis\\calories.sql"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association[{"\[Mu] Calories" -> data[[;; , 1 ;; 2]],
@@ -82,7 +82,7 @@ Module[{database, data, dataH, yMin = 60, yMax = 105, ySteps = 2},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
     Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
-codes\\fitBitDataAnalysis\\heartRate.txt"]];
+codes\\fitBitDataAnalysis\\heartRate.sql"]];
   data = {stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association[{"\[Mu] HeartRate" -> data[[;; , 1 ;; 2]],
@@ -105,7 +105,7 @@ Module[{database, data, dataH, yMin = 0, yMax = 25000, ySteps = 1000},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database,
     Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_\
-codes\\fitBitDataAnalysis\\steps.txt"]];
+codes\\fitBitDataAnalysis\\steps.sql"]];
   data = SortBy[{stringToTime[#[[1]]]} ~ Join ~ Rest[#] & /@
       data, #[[1]] &];
 
