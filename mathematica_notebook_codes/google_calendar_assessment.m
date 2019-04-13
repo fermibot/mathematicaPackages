@@ -3,7 +3,7 @@
 (* :Author: Alcatraz *)
 (* :Date: 2019-04-13 *)
 
-googlecalendar = ServiceConnect["GoogleCalendar"];
+googleCalendar = ServiceConnect["GoogleCalendar"];
 
 MapThread[
   With[{\[Delta] = #2}
@@ -11,7 +11,7 @@ MapThread[
     tickGrid = {DateRange["2010", "2020", Quantity[2, #1]],
       Automatic};
     data = {#["Start"], #["End"], #["Summary"]} & /@
-        googlecalendar["EventList"];
+        googleCalendar["EventList"];
     TimelinePlot[(Interval[{#[[1]], #[[2]]}] -> #[[3]] & /@
         Select[data, #[[1]] > DatePlus[Today, -\[Delta]] &]) ~
         Join ~ {Now -> Style["Now", 15, Red]}, ImageSize -> 1600,
