@@ -133,5 +133,7 @@ Quiet@Module[{database, data, dataH, yMin = 0, yMax = 100000,
     ChartLabels -> Placed[{Rotate[#, 90 Degree] & /@ (Values@data), Rotate[#, 75 Degree] & /@ keys}, {Above, Below}],
     ImageSize -> 1600, AspectRatio -> 0.2, Frame -> True,
     GridLines -> {All, Range[yMin, yMax, ySteps]},
-    FrameTicks -> {None, Range[yMin, yMax, ySteps]}]
+    FrameTicks -> {None, Range[yMin, yMax, ySteps]},
+    BarSpacing -> Large
+  ]
 ]
