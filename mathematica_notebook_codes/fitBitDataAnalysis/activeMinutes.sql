@@ -1,9 +1,18 @@
-SELECT *, 'Light' AS [ActivityType]
+SELECT
+	CAST(dateTimeID AS VARCHAR),
+	minutes,
+	'Light' AS [ActivityType]
 FROM lightlyActiveMinutes
 UNION
-SELECT *, 'Moderate'
+SELECT
+	CAST(dateTimeID AS VARCHAR),
+	minutes,
+	'Moderate'
 FROM moderatelyActiveMinutes
 UNION
-SELECT *, 'Very'
+SELECT
+	CAST(dateTimeID AS VARCHAR),
+	minutes,
+	'Very'
 FROM veryActiveMinutes
 ORDER BY ActivityType

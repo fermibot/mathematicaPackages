@@ -4,8 +4,16 @@
 (* :Date: 2019-04-06 *)
 
 Needs["DatabaseLink`"];
-ClearAll[stringToTime];
+ClearAll[stringToTime, weekYearExtract];
+
 stringToTime[dateString_?StringQ] := DateObject[{dateString, {"Month", "//", "Day", "//", "Year", " ", "Hour24", ":", "Minute", ":", "Second"}}, TimeZone -> "America/Chicago"];
+weekYearExtract[inString_String] := Module[{yearStart, datePart, year},
+  year = StringTake[inString, {7, 8}];
+  yearStart = "01-01-20" <> year;
+  datePart = StringTake[inString, 8];
+  datePart = StringTake[datePart, 6] <> "20" <> year;
+  "20" <> year <> "-" <> StringPadLeft[1 + Floor@First@DateDifference[yearStart, datePart, "Week"] // ToString, 2, "0"]
+]
 
 
 Module[{folder =
@@ -118,4 +126,18 @@ codes\\fitBitDataAnalysis\\steps.sql"]];
     PlotStyle -> {{Lighter@Blue, Thickness@0.001}, {Red, Opacity[0.4],
       Thickness@0}, {Green, Opacity[0.4], Thickness@0}},
     Filling -> Axis, FillingStyle -> LightBlue, InterpolationOrder -> 2]
+]
+
+
+Quiet@Module[{database, data, dataH, yMin = 0, yMax = 100000,
+  ySteps = 5000, keys},
+  database = OpenSQLConnection["fitbit"];
+  data = SQLExecute[database, Import["D:\\Programming\\mathematicaPackages\\mathematica_\notebook_codes\\fitBitDataAnalysis\\steps.sql"]];
+  data = KeySort@(GroupBy[{weekYearExtract[#[[1]]], #[[2]]} & /@ data, #[[1]] &]);
+  keys = Keys@data;
+  BarChart[Association[(# -> Total[(data[#][[All, 2]])]) & /@ keys],
+    ChartLabels -> Placed[Rotate[#, 90 Degree] & /@ keys, Above],
+    ImageSize -> 1600, AspectRatio -> 0.4, Frame -> True,
+    GridLines -> {All, Range[yMin, yMax, ySteps]},
+    FrameTicks -> {All, Range[yMin, yMax, ySteps]}]
 ]
