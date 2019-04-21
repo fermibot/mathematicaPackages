@@ -15,27 +15,27 @@ weekYearExtract[inString_String] := Module[{yearStart, datePart, year},
   "20" <> year <> "-" <> StringPadLeft[1 + Floor@First@DateDifference[yearStart, datePart, "Week"] // ToString, 2, "0"]
 ]
 
-Module[{folder =
-    "C:\\Users\\Alcatraz\\Downloads\\MyFitbitData\\\
-AshwiniKumarKounduri\\user-site-export\\"},
-  First[StringSplit[StringDelete[#, folder], "-"]] & /@
-      FileNames["*", folder] // Union // Print;]
-
 Module[{database, data, dataH},
   database = OpenSQLConnection[JDBC["SQLite", "D:\\Programming\\_databases\\fitbitData.db"]];
-  data = SQLExecute[database,
-    Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_codes\\fitBitDataAnalysis\\activeMinutes.sql"],
-    "ShowColumnHeadings" -> True];
+  data =
+      SQLExecute[database,
+        Import["D:\\Programming\\mathematicaPackages\\mathematica_notebook_codes\\fitBitDataAnalysis\\activeMinutes.sql"],
+        "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
   data = GroupBy[{stringToTime@#[[1]], #[[2]], #[[3]]} & /@ data, #[[3]] &];
   data = #[[All, ;; 2]] & /@ data;
-  DateListPlot[data, ImageSize -> 1600, AspectRatio -> 0.4,
+  DateListPlot[
+    data,
+    ImageSize -> 1600,
+    AspectRatio -> 0.4,
     Frame -> True,
     FrameTicks -> {data[[1, All, 1]][[;; ;; 10]], Range[0, 500, 25]},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     GridLines -> {data[[1, All, 1]][[;; ;; 5]], Range[0, 500, 10]},
-    FrameLabel -> {"", "Time in Minutes"}, InterpolationOrder -> 1]
+    FrameLabel -> {"", "Time in Minutes"},
+    InterpolationOrder -> 1,
+    PlotLegends -> Placed[Automatic, Above]]
 ]
 
 Module[{database, data, dataH},
@@ -47,7 +47,8 @@ Module[{database, data, dataH},
     Association@{
       "IN_DEFAULT_ZONE_1" -> Select[data[[All, {1, 2}]], Last@# < 400 &],
       "IN_DEFAULT_ZONE_2" -> data[[All, {1, 3}]],
-      "IN_DEFAULT_ZONE_3" -> data[[All, {1, 4}]]},
+      "IN_DEFAULT_ZONE_3" -> data[[All, {1, 4}]]
+    },
     ImageSize -> 1600,
     AspectRatio -> 0.4,
     Frame -> True,
@@ -55,9 +56,10 @@ Module[{database, data, dataH},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     GridLines -> {data[[All, 1]][[;; ;; 2]], Range[0, 300, 25]},
     PlotRange -> {All, {0, 300}},
-    InterpolationOrder -> 2,
+    InterpolationOrder -> 1,
     FrameLabel -> {"", "Time in Minutes"},
-    Filling -> Axis]
+    Filling -> Axis,
+    PlotLegends -> Placed[Automatic, Above]]
 ]
 
 
