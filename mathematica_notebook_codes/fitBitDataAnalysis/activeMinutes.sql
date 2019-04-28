@@ -1,5 +1,5 @@
 SELECT
-	CAST(dateTimeID AS VARCHAR),
+	CAST(dateTimeID AS VARCHAR) dateTime,
 	minutes,
 	'Light' AS [ActivityType]
 FROM lightlyActiveMinutes
