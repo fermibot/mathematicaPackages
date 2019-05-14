@@ -1,6 +1,10 @@
-SELECT substr(datetimeID, 0, 11) || ' 00:00:00'
-     , avg(bpm)
-     , avg(bpm) + avg(confidence)
-     , avg(bpm) - avg(confidence)
-FROM heartRate
-GROUP BY substr(datetimeID, 0, 11)
+WITH AvgBPM AS (SELECT strftime('%Y-%m-%d', dateTimeID) || ' 00:00:00' AS Day
+                     , avg(bpm)                                        AS AvgBPMDaily
+                     , avg(bpm) + avg(confidence)                      AS AvgBPMDailyUpperConfidence
+                     , avg(bpm) - avg(confidence)                      AS AvgBPMDailyLoweConfidence
+
+                FROM heartRate
+                GROUP BY Day)
+
+SELECT Day, AvgBPMDaily, AvgBPMDailyUpperConfidence, AvgBPMDailyLoweConfidence
+FROM AvgBPM
