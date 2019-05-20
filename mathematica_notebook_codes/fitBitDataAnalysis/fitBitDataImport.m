@@ -24,6 +24,8 @@ FBDIPlotHeartRateByDay::usage = "Does what the name says";
 FBDIPlotHeartRateByHour::usage = "Does what the name says";
 FBDIPlotStepsByDay::usage = "Does what the name says";
 FBDIPlotStepsByWeek::usage = "Does what the name says";
+FBDIPlotHRCaloriesStepsHourly::usage = "Does what the name says";
+FBDIPlotHRCaloriesStepsMinutely::usage = "Does what the name says";
 
 Begin["`Private`"];
 
@@ -193,6 +195,30 @@ FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 100000,
     FrameTicks -> {None, Range[yMin, yMax, ySteps]}, BarSpacing -> Large]
 ];
 
+
+FBDIPlotHRCaloriesStepsMinutely := Module[{database, data, dataH, keys},
+  database = OpenSQLConnection["fitbit"];
+  data = SQLExecute[database, Import[FBDIDirectory <> "minutely_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
+  dataH = First@data;
+  data = Rest@data;
+  Row@Riffle[
+    ListPlot[data[[All, Reverse@#]], AspectRatio -> 1,
+      PlotRange -> All, Frame -> True,
+      FrameLabel -> dataH[[Reverse@#]], PlotRange -> All,
+      ImageSize -> 600] & /@ Subsets[Range@3, {2}], "\t"]
+];
+
+FBDIPlotHRCaloriesStepsHourly := Module[{database, data, dataH, keys},
+  database = OpenSQLConnection["fitbit"];
+  data = SQLExecute[database, Import[FBDIDirectory <> "Hourly_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
+  dataH = First@data;
+  data = Rest@data;
+  Row@Riffle[
+    ListPlot[data[[All, Reverse@#]], AspectRatio -> 1,
+      PlotRange -> All, Frame -> True,
+      FrameLabel -> dataH[[Reverse@#]], PlotRange -> All,
+      ImageSize -> 600] & /@ Subsets[Range@3, {2}], "\t"]
+];
 
 End[]; (* `Private` *)
 
