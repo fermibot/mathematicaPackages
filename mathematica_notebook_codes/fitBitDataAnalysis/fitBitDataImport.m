@@ -74,7 +74,7 @@ FBDIPlotActiveMinutes[] := Module[{database, data, dataH, yMin = 0, yMax = 500, 
 ];
 
 
-FBDIPlotDefaultZones[] := Module[{database, data, dataH, yMin = 0, yMax = 300, ySteps = 10},
+FBDIPlotDefaultZones[] := Module[{database, data, dataH, yMin = 0, yMax = 400, ySteps = 10},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database, Import[FBDIDirectory <> "defaultZones.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
@@ -89,12 +89,12 @@ FBDIPlotDefaultZones[] := Module[{database, data, dataH, yMin = 0, yMax = 300, y
     FrameTicks -> {data[[All, 1]][[;; ;; 12]], Range[yMin, yMax, ySteps]},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     GridLines -> {data[[All, 1]][[;; ;; 4]], Range[yMin, yMax, ySteps]},
-    PlotRange -> {All, {0, 300}}, InterpolationOrder -> 1,
+    PlotRange -> {All, {0, yMax}}, InterpolationOrder -> 1,
     FrameLabel -> {"", "Time in Minutes"}, Filling -> Axis,
     PlotLegends -> Placed[Automatic, Above]]
 ];
 
-FBDIPlotCaloriesByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 4400, ySteps = 200},
+FBDIPlotCaloriesByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 4600, ySteps = 200},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database, Import[FBDIDirectory <> "calories.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
@@ -108,7 +108,7 @@ FBDIPlotCaloriesByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 4400,
     FrameLabel -> {"", "Calories"}, InterpolationOrder -> 1]
 ];
 
-FBDIPlotCaloriesByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 25000,
+FBDIPlotCaloriesByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 30000,
   ySteps = 1000, keys},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database, Import[FBDIDirectory <> "caloriesByWeek.sql"]];
@@ -168,7 +168,7 @@ FBDIPlotHeartRateByHour[] := Module[{database, data, dataH, yMin = 45, yMax = 19
 
 
 
-FBDIPlotStepsByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 25000, ySteps = 1000},
+FBDIPlotStepsByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 35000, ySteps = 1000},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database, Import[FBDIDirectory <> "steps.sql"]];
   data = SortBy[{DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data, #[[1]] &];
@@ -182,7 +182,7 @@ FBDIPlotStepsByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 25000, y
     FillingStyle -> LightBlue, InterpolationOrder -> 1]
 ];
 
-FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 100000, ySteps = 5000,
+FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
   keys},
   database = OpenSQLConnection["fitbit"];
   data = SQLExecute[database, Import[FBDIDirectory <> "stepsByWeek.sql"]];
