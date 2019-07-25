@@ -26,7 +26,7 @@ Module[{solutions, twoHourTemps = Range[33, 63, 1], constants},
   Plot[Evaluate[solutions], {t, 0, 200}, ImageSize -> 788,
     AspectRatio -> 1, Frame -> True,
     PlotLegends ->
-        Placed[("t[2] = " <> ToString[#] <> "\[Degree]C" & /@
+        Placed[("T[2] = " <> ToString[#] <> "\[Degree]C" & /@
             twoHourTemps), Below], PlotLabel -> Style["y[t] vs. t", 20],
     GridLines -> {Range[20, 200, 5], twoHourTemps},
     FrameTicks -> {Range[20, 200, 5], twoHourTemps},
