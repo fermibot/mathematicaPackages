@@ -17,6 +17,12 @@ QuickSort::usage = "Fermibot's Mathematica implementation of Quick-Sort algorith
 QuickSortTrack::usage = "It's again QuickSort but it shows the progress of the sorting mechanism";
 pivotedList::usage = "Supporting function needed for QuickSort";
 
+InsertionSort::usage = "InsertionSort[]";
+InsertionSortTrack::usage = "InsertionSortTrack[]";
+
+ShellSort::usage = "ShellSort[]";
+ShellSortTrack::usage = "ShellSortTrack[]";
+
 FactorialRecursive::usage = "Factorial calculated using recursion";
 
 Begin["Private`"];
@@ -107,6 +113,69 @@ QuickSort[listIn_List] := Module[{list = {listIn}, pivotOut},
   ];
   Return@list
 ];
+
+
+InsertionSortTrack[list_List] := Module[{listOut = list, temp, i, j, length, track = List[]},
+  length = Length@list;
+  For[i = 2, i <= length, i++,
+    For[j = i, j > 1 && listOut[[j]] < listOut[[j - 1]], j--,
+      temp = listOut[[j]];
+      listOut[[j]] = listOut[[j - 1]];
+      listOut[[j - 1]] = temp;
+    ];
+    AppendTo[track, listOut];
+  ];
+  track
+];
+
+InsertionSort[list_List] := Module[{listOut = list, temp, i, j, length},
+  length = Length@list;
+  For[i = 2, i <= length, i++,
+    For[j = i, j > 1 && listOut[[j]] < listOut[[j - 1]], j--,
+      temp = listOut[[j]];
+      listOut[[j]] = listOut[[j - 1]];
+      listOut[[j - 1]] = temp;
+    ]
+  ];
+  listOut
+];
+
+
+ShellSortTrack[list_List] := Module[{temp, i, j, h = 1, length, listOut, track = List[]},
+  listOut = list;
+  length = Length@list;
+  While[h < length / 3, h = 3 * + 1];
+  While[h >= 1,
+    For[i = h, i < length + 1, i++,
+      For[j = h, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
+        temp = listOut[[j - h]];
+        listOut[[j - h]] = listOut[[j]];
+        listOut[[j]] = temp;
+      ];
+      AppendTo[track, listOut];
+    ];
+    h = Floor[h / 3];
+  ];
+  track
+];
+
+ShellSort[list_List] := Module[{temp, i, j, h = 1, length, listOut},
+  listOut = list;
+  length = Length@list;
+  While[h < length / 3, h = 3 * + 1];
+  While[h >= 1,
+    For[i = h, i < length + 1, i++,
+      For[j = h, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
+        temp = listOut[[j - h]];
+        listOut[[j - h]] = listOut[[j]];
+        listOut[[j]] = temp;
+      ];
+    ];
+    h = Floor[h / 3];
+  ];
+  listOut
+];
+
 
 FactorialRecursive[n_] :=
     Module[{result},
