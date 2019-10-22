@@ -144,10 +144,10 @@ InsertionSort[list_List] := Module[{listOut = list, temp, i, j, length},
 ShellSortTrack[list_List] := Module[{temp, i, j, h = 1, length, listOut, track = List[]},
   listOut = list;
   length = Length@list;
-  While[h < length / 3, h = 3 * + 1];
+  While[h < length / 3, h = 3 * h + 1];
   While[h >= 1,
     For[i = h, i < length + 1, i++,
-      For[j = h, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
+      For[j = i, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
         temp = listOut[[j - h]];
         listOut[[j - h]] = listOut[[j]];
         listOut[[j]] = temp;
@@ -162,10 +162,10 @@ ShellSortTrack[list_List] := Module[{temp, i, j, h = 1, length, listOut, track =
 ShellSort[list_List] := Module[{temp, i, j, h = 1, length, listOut},
   listOut = list;
   length = Length@list;
-  While[h < length / 3, h = 3 * + 1];
+  While[h < length / 3, h = 3 * h + 1];
   While[h >= 1,
     For[i = h, i < length + 1, i++,
-      For[j = h, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
+      For[j = i, j >= h && (listOut[[j]] < listOut[[j - h]]), j -= h,
         temp = listOut[[j - h]];
         listOut[[j - h]] = listOut[[j]];
         listOut[[j]] = temp;
