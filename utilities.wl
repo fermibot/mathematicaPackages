@@ -15,6 +15,7 @@ stringJoinBuffer::usage = "Joins a list of strings with a buffer in between them
 
 QuickSort::usage = "Fermibot's Mathematica implementation of Quick-Sort algorithm";
 QuickSortTrack::usage = "It's again QuickSort but it shows the progress of the sorting mechanism";
+QuickSortTrackRaw::usage = "QuickSortTrackRaw[]";
 pivotedList::usage = "Supporting function needed for QuickSort";
 
 InsertionSort::usage = "InsertionSort[]";
@@ -23,9 +24,13 @@ InsertionSortTrack::usage = "InsertionSortTrack[]";
 ShellSort::usage = "ShellSort[]";
 ShellSortTrack::usage = "ShellSortTrack[]";
 
+SelectionSort::usage = "SelectionSort[]";
+SelectionSortTrack::usage = "SelectionSortTrack[]";
+
 FactorialRecursive::usage = "Factorial calculated using recursion";
 
 Begin["Private`"];
+
 Needs["qFunctions`"];
 
 accumulatingMean[list_List] := N[Accumulate[list] / Range[1, Length[list]]];
@@ -93,7 +98,18 @@ pivotedList[list_List] :=
 
 
 QuickSortTrack[listIn_List] := Module[{list = {listIn}, pivotOut, tracker = {}},
-  While[someListQ[list],
+  While[SomeListQ[list],
+    Table[
+      If[ListQ[list[[q]]],
+        pivotOut = DeleteCases[pivotedList[list[[q]]], {}];
+        list = Drop[list, {q}];
+        Table[list = Insert[list, pivotOut[[s]], q], {s, 1, Length@pivotOut}]];, {q, 1, Length@list}];
+    AppendTo[tracker, Flatten@list];];
+  Return@tracker
+];
+
+QuickSortTrackRaw[listIn_List] := Module[{list = {listIn}, pivotOut, tracker = {}},
+  While[SomeListQ[list],
     Table[
       If[ListQ[list[[q]]],
         pivotOut = DeleteCases[pivotedList[list[[q]]], {}];
@@ -104,7 +120,7 @@ QuickSortTrack[listIn_List] := Module[{list = {listIn}, pivotOut, tracker = {}},
 ];
 
 QuickSort[listIn_List] := Module[{list = {listIn}, pivotOut},
-  While[someListQ[list],
+  While[SomeListQ[list],
     Table[
       If[ListQ[list[[q]]],
         pivotOut = DeleteCases[pivotedList[list[[q]]], {}];
@@ -177,10 +193,67 @@ ShellSort[list_List] := Module[{temp, i, j, h = 1, length, listOut},
 ];
 
 
+SelectionSortTrack[list_List] := Module[{listOut = list, min, length, temp, track = List[]},
+  length = Length@list;
+  For[i = 1, i <= length, i++,
+    min = i;
+    For[j = i + 1, j <= length, j++,
+      If[listOut[[j]] < listOut[[min]], min = j]];
+    temp = listOut[[i]];
+    listOut[[i]] = listOut[[min]];
+    listOut[[min]] = temp;
+    AppendTo[track, listOut];
+  ];
+  track
+];
+
+
+SelectionSort[list_List] := Module[{listOut = list, min, length, temp},
+  length = Length@list;
+  For[i = 1, i <= length, i++,
+    min = i;
+    For[j = i + 1, j <= length, j++,
+      If[listOut[[j]] < listOut[[min]], min = j]];
+    temp = listOut[[i]];
+    listOut[[i]] = listOut[[min]];
+    listOut[[min]] = temp;
+  ];
+  listOut
+];
+
 FactorialRecursive[n_] :=
     Module[{result},
-      If[n == 1, result = 1, result = FactorialRecursive = n * FactorialRecursive[n - 1]];
+      If[n == 1 || n == 0, result = 1, result = FactorialRecursive = n * FactorialRecursive[n - 1]];
       result];
+
+
+ExportSelectionAlgorithm[sortingFunction_Symbol, label_String] :=
+    Module[{images, randomData = Join @@ Import[NotebookDirectory[] <> "sorting_data.csv"], durations},
+      images = Labeled[
+        BarChart[#,
+          PlotRange -> {Automatic, {0, 1}},
+          FrameTicks -> None,
+          AspectRatio -> 1,
+          Frame -> True,
+          ImageSize -> 300], label, Top] & /@ sortingFunction[randomData];
+      durations = ConstantArray[0.2, Length@images];
+      durations[[-1]] = 6;
+      Export[NotebookDirectory[] <> label <> "_example.gif",
+        images,
+        "DisplayDurations" -> durations,
+        "AnimationRepetitions" -> \[Infinity]]
+    ];
+
+ExportSelectionAlgorithmExecute := Module[{functions},
+  functions =
+      Association@{"Selection_Sort" -> SelectionSortTrack,
+        "Insertion_Sort" -> InsertionSortTrack,
+        "Shell_Sort" -> ShellSortTrack, "Quick_Sort" -> QuickSortTrack
+      };
+  MapThread[
+    ExportSelectionAlgorithm[#1, #2] &, {Values@functions,
+    Keys@functions}]
+]
 
 End[];
 
