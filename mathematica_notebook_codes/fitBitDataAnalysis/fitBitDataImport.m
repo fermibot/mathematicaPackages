@@ -23,6 +23,7 @@ FBDIPlotCaloriesByWeek::usage = "Does what the name says";
 FBDIPlotHeartRateByDay::usage = "Does what the name says";
 FBDIPlotHeartRateByHour::usage = "Does what the name says";
 FBDIPlotStepsByDay::usage = "Does what the name says";
+FBDIPlotStepsByDay2::usage = "FBDIPlotStepsByDay2[]";
 FBDIPlotStepsByWeek::usage = "Does what the name says";
 FBDIPlotHRCaloriesStepsHourly::usage = "Does what the name says";
 FBDIPlotHRCaloriesStepsMinutely::usage = "Does what the name says";
@@ -181,6 +182,20 @@ FBDIPlotStepsByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 35000, y
     PlotStyle -> {{Lighter@Blue, Thickness@0.001}}, Filling -> Axis,
     FillingStyle -> LightBlue, InterpolationOrder -> 1]
 ];
+
+FBDIPlotStepsByDay2[] := Module[{database, data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
+  keys},
+  database = OpenSQLConnection["fitbit"];
+  data = SQLExecute[database, Import[FBDIDirectory <> "steps.sql"]];
+  data = Association[(#[[1]] -> #[[2]]) & /@ data];
+  keys = data // Keys;
+  BarChart[data,
+    ChartLabels -> Placed[{Rotate[#, 90 Degree] & /@ (Values@data), Rotate[#, 75 Degree] & /@ keys}, {Above, Below}],
+    ImageSize -> 1800, AspectRatio -> 0.2, Frame -> True,
+    GridLines -> {None, {70000}},
+    FrameTicks -> {None, Range[yMin, yMax, ySteps]}, BarSpacing -> Large]
+];
+
 
 FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
   keys},
