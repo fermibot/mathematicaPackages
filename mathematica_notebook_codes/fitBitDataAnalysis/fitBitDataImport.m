@@ -56,9 +56,8 @@ FBDIGetRecordTypes[] := Module[{folder =
   First[StringSplit[StringDelete[#, folder], "-"]] & /@ FileNames["*", folder] // Union];
 
 
-FBDIPlotActiveMinutes[] := Module[{database, data, dataH, yMin = 0, yMax = 500, ySteps = 20},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "activeMinutes.sql"], "ShowColumnHeadings" -> True];
+FBDIPlotActiveMinutes[] := Module[{ data, dataH, yMin = 0, yMax = 500, ySteps = 20},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "activeMinutes.sql"], "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
   data = GroupBy[{DateObject@#[[1]], #[[2]], #[[3]]} & /@ data, #[[3]] &];
@@ -75,9 +74,8 @@ FBDIPlotActiveMinutes[] := Module[{database, data, dataH, yMin = 0, yMax = 500, 
 ];
 
 
-FBDIPlotDefaultZones[] := Module[{database, data, dataH, yMin = 0, yMax = 400, ySteps = 10},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "defaultZones.sql"]];
+FBDIPlotDefaultZones[] := Module[{data, dataH, yMin = 0, yMax = 400, ySteps = 10},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "defaultZones.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association@{
@@ -95,9 +93,8 @@ FBDIPlotDefaultZones[] := Module[{database, data, dataH, yMin = 0, yMax = 400, y
     PlotLegends -> Placed[Automatic, Above]]
 ];
 
-FBDIPlotCaloriesByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 4600, ySteps = 200},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "calories.sql"]];
+FBDIPlotCaloriesByDay[] := Module[{data, dataH, yMin = 0, yMax = 4600, ySteps = 200},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "calories.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[Association[{"Calories" -> data[[;; , 1 ;; 2]]}],
     ImageSize -> 1800, AspectRatio -> 0.2, Frame -> True,
@@ -109,10 +106,9 @@ FBDIPlotCaloriesByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 4600,
     FrameLabel -> {"", "Calories"}, InterpolationOrder -> 1]
 ];
 
-FBDIPlotCaloriesByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 30000,
+FBDIPlotCaloriesByWeek[] := Module[{data, dataH, yMin = 0, yMax = 30000,
   ySteps = 1000, keys},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "caloriesByWeek.sql"]];
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "caloriesByWeek.sql"]];
   data = Association[(#[[1]] -> #[[2]]) & /@ data];
   keys = data // Keys;
   BarChart[data,
@@ -123,9 +119,8 @@ FBDIPlotCaloriesByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 3000
     BarSpacing -> Large, PlotRange -> {Automatic, {yMin, yMax}}]
 ];
 
-FBDIPlotHeartRateByDay[] := Module[{database, data, dataH, yMin = 60, yMax = 105, ySteps = 2},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "heartRate.sql"]];
+FBDIPlotHeartRateByDay[] := Module[{data, dataH, yMin = 60, yMax = 105, ySteps = 2},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "heartRate.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association@{
@@ -145,11 +140,10 @@ FBDIPlotHeartRateByDay[] := Module[{database, data, dataH, yMin = 60, yMax = 105
     InterpolationOrder -> 2]
 ];
 
-FBDIPlotHeartRateByHour[] := Module[{database, data, dataH, yMin = 45, yMax = 190, ySteps = 5,
+FBDIPlotHeartRateByHour[] := Module[{data, dataH, yMin = 45, yMax = 190, ySteps = 5,
   meanData},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "heartRateByHour.sql"]];
-  meanData = SQLExecute[database, Import[FBDIDirectory <> "heartRate.sql"]];
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "heartRateByHour.sql"]];
+  meanData = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "heartRate.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[
     Association@{
@@ -169,24 +163,28 @@ FBDIPlotHeartRateByHour[] := Module[{database, data, dataH, yMin = 45, yMax = 19
 
 
 
-FBDIPlotStepsByDay[] := Module[{database, data, dataH, yMin = 0, yMax = 35000, ySteps = 1000},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "steps.sql"]];
+FBDIPlotStepsByDay[] := Module[{data, dataH, data2, yMin = 0, yMax = 35000, ySteps = 1000, cumulative},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "steps.sql"]];
   data = SortBy[{DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data, #[[1]] &];
-  DateListPlot[Association@{"Total Steps" -> data[[;; , 1 ;; 2]]},
-    ImageSize -> 1800, AspectRatio -> 0.2, Frame -> True,
-    FrameTicks -> {data[[All, 1]][[;; ;; 18]], Range[yMin, yMax, ySteps]},
+  data2 = data[[;; , 2]];
+  data2 = N[Accumulate[data2] / Range[1, Length[data2]]];
+  data2 = Transpose[{data[[;; , 1]], data2}];
+  DateListPlot[ Association@{"Daily Steps" -> data[[;; , 1 ;; 2]], "Moving Average Steps" -> data2[[;; , 1 ;; 2]]},
+    ImageSize -> 1800,
+    AspectRatio -> 0.2,
+    Frame -> True,
+    FrameTicks -> {data[[All, 1]][[;; ;; 20]], Range[yMin, yMax, ySteps]},
     GridLines -> {data[[All, 1]][[;; ;; 3]], Range[yMin, yMax, ySteps]},
     PlotRange -> {Automatic, {yMin, yMax}},
-    DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
-    PlotStyle -> {{Lighter@Blue, Thickness@0.001}}, Filling -> Axis,
-    FillingStyle -> LightBlue, InterpolationOrder -> 1]
-];
+    DateTicksFormat -> {"Day", "/", "MonthNameShort", "/", "Year"},
+    PlotStyle -> {{Red, Thickness@0.001}, {Lighter@Blue, Thickness@0.001}},
+    Filling -> Axis,
+    InterpolationOrder -> 1,
+    PlotLegends -> Automatic]];
 
-FBDIPlotStepsByDay2[] := Module[{database, data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
+FBDIPlotStepsByDay2[] := Module[{data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
   keys},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "steps.sql"]];
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "steps.sql"]];
   data = Association[(#[[1]] -> #[[2]]) & /@ data];
   keys = data // Keys;
   BarChart[data,
@@ -197,10 +195,8 @@ FBDIPlotStepsByDay2[] := Module[{database, data, dataH, yMin = 0, yMax = 130000,
 ];
 
 
-FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 130000, ySteps = 5000,
-  keys},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "stepsByWeek.sql"]];
+FBDIPlotStepsByWeek[] := Module[{ data, dataH, yMin = 0, yMax = 130000, ySteps = 5000, keys},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "stepsByWeek.sql"]];
   data = Association[(#[[1]] -> #[[2]]) & /@ data];
   keys = data // Keys;
   BarChart[data,
@@ -211,9 +207,8 @@ FBDIPlotStepsByWeek[] := Module[{database, data, dataH, yMin = 0, yMax = 130000,
 ];
 
 
-FBDIPlotHRCaloriesStepsMinutely := Module[{database, data, dataH, keys},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "minutely_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
+FBDIPlotHRCaloriesStepsMinutely := Module[{data, dataH, keys},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "minutely_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
   Row@Riffle[
@@ -223,9 +218,8 @@ FBDIPlotHRCaloriesStepsMinutely := Module[{database, data, dataH, keys},
       ImageSize -> 600] & /@ Subsets[Range@3, {2}], "\t"]
 ];
 
-FBDIPlotHRCaloriesStepsHourly := Module[{database, data, dataH, keys},
-  database = OpenSQLConnection["fitbit"];
-  data = SQLExecute[database, Import[FBDIDirectory <> "Hourly_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
+FBDIPlotHRCaloriesStepsHourly := Module[{data, dataH, keys},
+  data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "Hourly_HR_calories_steps.sql"], "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
   Row@Riffle[
