@@ -229,6 +229,29 @@ FBDIPlotHRCaloriesStepsHourly := Module[{data, dataH, keys},
       ImageSize -> 600] & /@ Subsets[Range@3, {2}], "\t"]
 ];
 
+(*
+
+folder = "C:\\Users\\Alcatraz\\Downloads\\MyFitbitData\\\
+AshwiniKumarKounduri\\user-site-export";
+data = (#[[2]] & /@ #[[2 ;; 4]]) & /@ Import[#] & /@
+     FileNames["*sleep*", folder] // Join @@ # & //
+   DateObject /@ # & /@ # &;
+function[{a_, b_}] := a + Divide[b, 60];
+startTime = {#[[1]], function[#[[2, 1, -3 ;; -2]]],
+     UnitConvert[DateDifference @@ #[[2 ;;]],
+       MixedUnit[{"Hours"}]][[1, 1, 1]]} & /@ data;
+endTime = {#[[1]], #[[2]] + #[[3]]} & /@ startTime;
+
+
+DateListPlot[{startTime[[;; , {1, 2}]], endTime}, ImageSize -> 1700,
+ AspectRatio -> 0.35, Joined -> False,
+ PlotStyle -> {PointSize@0.0025}, Filling -> 1 -> {2},
+ GridLines -> {None, Range[24]}, Frame -> True,
+ FrameTicks -> {DateRange[endTime[[1, 1]], Today, {3, "Weeks"}],
+   Range[24]}, DateTicksFormat -> {"Day", "/", "Month", "/", "Year"}]
+
+*)
+
 End[]; (* `Private` *)
 
 EndPackage[];
