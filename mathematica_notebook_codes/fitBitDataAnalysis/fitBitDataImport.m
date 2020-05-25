@@ -99,7 +99,7 @@ FBDIPlotDefaultZones[] := Module[{data, dataH, yMin = 0, yMax = 400, ySteps = 10
     PlotLegends -> Placed[Automatic, Above]]
 ];
 
-FBDIPlotCaloriesByDay[] := Module[{data, dataH, yMin = 0, yMax = 4600, ySteps = 200},
+FBDIPlotCaloriesByDay[] := Module[{data, dataH, yMin = 0, yMax = 5000, ySteps = 200},
   data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "calories.sql"]];
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[Association[{"Calories" -> data[[;; , 1 ;; 2]]}],
