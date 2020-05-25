@@ -35,6 +35,7 @@ Needs["DatabaseLink`"];
 FBDIDirectory := "D:\\Programming\\mathematicaPackages\\mathematica_notebook_codes\\fitBitDataAnalysis\\";
 FBDIDatabasePath := "D:\\Programming\\_databases\\fitbitData.db";
 FBDIDatabaseConnection := OpenSQLConnection["fitbit"];
+xStepsGlobal = 30;
 
 stringToTime[dateString_?StringQ] :=
     DateObject[{dateString, {"Month", "//", "Day", "//", "Year", " ",
@@ -56,21 +57,26 @@ FBDIGetRecordTypes[] := Module[{folder =
   First[StringSplit[StringDelete[#, folder], "-"]] & /@ FileNames["*", folder] // Union];
 
 
-FBDIPlotActiveMinutes[] := Module[{ data, dataH, yMin = 0, yMax = 500, ySteps = 20},
+FBDIPlotActiveMinutes[] := Module[{ data, dataH, yMin = 0, yMax = 600, ySteps = 20},
   data = SQLExecute[FBDIDatabaseConnection, Import[FBDIDirectory <> "activeMinutes.sql"], "ShowColumnHeadings" -> True];
   dataH = First@data;
   data = Rest@data;
   data = GroupBy[{DateObject@#[[1]], #[[2]], #[[3]]} & /@ data, #[[3]] &];
   data = #[[All, ;; 2]] & /@ data;
+  data["Total"] = Transpose[{data[[1, ;;, 1]], Plus @@ (data[[;;, ;;, 2]])}];
   DateListPlot[
     data,
     ImageSize -> 1800,
     AspectRatio -> 0.2,
     Frame -> True,
-    FrameTicks -> {data[[1, All, 1]][[;; ;; 20]], Range[yMin, yMax, ySteps]},
+    FrameTicks -> {data[[1, All, 1]][[;; ;; xStepsGlobal]], Range[yMin, yMax, ySteps]},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
-    GridLines -> {data[[1, All, 1]][[;; ;; 20]], Range[yMin, yMax, ySteps]}, FrameLabel -> {"", "Time in Minutes"},
-    InterpolationOrder -> 2, PlotLegends -> Placed[Automatic, Above]]
+    GridLines -> {data[[1, All, 1]][[;; ;; xStepsGlobal / 5]], Range[yMin, yMax, ySteps]},
+    FrameLabel -> {"", "Time in Minutes"},
+    InterpolationOrder -> 2,
+    PlotLegends -> Placed[Automatic, Above],
+    PlotRange -> {All, {0, yMax}}
+  ]
 ];
 
 
@@ -85,9 +91,9 @@ FBDIPlotDefaultZones[] := Module[{data, dataH, yMin = 0, yMax = 400, ySteps = 10
     },
     ImageSize -> 1800,
     AspectRatio -> 0.2, Frame -> True,
-    FrameTicks -> {data[[All, 1]][[;; ;; 30]], Range[yMin, yMax, ySteps]},
+    FrameTicks -> {data[[All, 1]][[;; ;; xStepsGlobal]], Range[yMin, yMax, ySteps]},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
-    GridLines -> {data[[All, 1]][[;; ;; 6]], Range[yMin, yMax, ySteps]},
+    GridLines -> {data[[All, 1]][[;; ;; xStepsGlobal / 5]], Range[yMin, yMax, ySteps]},
     PlotRange -> {All, {0, yMax}}, InterpolationOrder -> 1,
     FrameLabel -> {"", "Time in Minutes"}, Filling -> Axis,
     PlotLegends -> Placed[Automatic, Above]]
@@ -98,8 +104,8 @@ FBDIPlotCaloriesByDay[] := Module[{data, dataH, yMin = 0, yMax = 4600, ySteps = 
   data = {DateObject[#[[1]]]} ~ Join ~ Rest[#] & /@ data;
   DateListPlot[Association[{"Calories" -> data[[;; , 1 ;; 2]]}],
     ImageSize -> 1800, AspectRatio -> 0.2, Frame -> True,
-    FrameTicks -> {Sort[data[[All, 1]]][[;; ;; 30]], Range[yMin, yMax, ySteps]},
-    GridLines -> {Sort[data[[All, 1]][[;; ;; 6]]], Range[yMin, yMax, ySteps]},
+    FrameTicks -> {Sort[data[[All, 1]]][[;; ;; xStepsGlobal]], Range[yMin, yMax, ySteps]},
+    GridLines -> {Sort[data[[All, 1]][[;; ;; xStepsGlobal / 5]]], Range[yMin, yMax, ySteps]},
     PlotRange -> {Automatic, {yMin, yMax}},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     PlotStyle -> {{Automatic}, {Automatic, Opacity[0.4]}},
@@ -129,8 +135,8 @@ FBDIPlotHeartRateByDay[] := Module[{data, dataH, yMin = 60, yMax = 105, ySteps =
       "LowerConfidence" -> data[[;; , {1, 4}]]},
     ImageSize -> 1800,
     AspectRatio -> 0.2, Frame -> True,
-    FrameTicks -> {data[[All, 1]][[;; ;; 30]], Range[yMin, yMax, ySteps]},
-    GridLines -> {data[[All, 1]][[;; ;; 6]], Range[yMin, yMax, ySteps]},
+    FrameTicks -> {data[[All, 1]][[;; ;; xStepsGlobal]], Range[yMin, yMax, ySteps]},
+    GridLines -> {data[[All, 1]][[;; ;; xStepsGlobal / 5]], Range[yMin, yMax, ySteps]},
     PlotRange -> {Automatic, {yMin, yMax}},
     DateTicksFormat -> { "Day", "/", "MonthNameShort", "/", "Year"},
     PlotStyle -> {{Lighter@Blue, Thickness@0.001}, {Red, Opacity[0.4],
@@ -173,8 +179,8 @@ FBDIPlotStepsByDay[] := Module[{data, dataH, data2, yMin = 0, yMax = 35000, ySte
     ImageSize -> 1800,
     AspectRatio -> 0.2,
     Frame -> True,
-    FrameTicks -> {data[[All, 1]][[;; ;; 20]], Range[yMin, yMax, ySteps]},
-    GridLines -> {data[[All, 1]][[;; ;; 3]], Range[yMin, yMax, ySteps]},
+    FrameTicks -> {data[[All, 1]][[;; ;; xStepsGlobal]], Range[yMin, yMax, ySteps]},
+    GridLines -> {data[[All, 1]][[;; ;; xStepsGlobal / 5]], Range[yMin, yMax, ySteps]},
     PlotRange -> {Automatic, {yMin, yMax}},
     DateTicksFormat -> {"Day", "/", "MonthNameShort", "/", "Year"},
     PlotStyle -> {{Red, Thickness@0.001}, {Lighter@Blue, Thickness@0.001}},
